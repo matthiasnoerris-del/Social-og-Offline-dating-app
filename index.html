@@ -3,104 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aalborg Offline Dating & Events</title>
+    <title>Aalborg Offline</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 15px;
-        }
-        header {
-            text-align: center;
-            padding: 20px 0;
-        }
-        header h1 {
-            margin: 0;
-            color: #ff4757;
-            font-size: 24px;
-        }
-        header p {
-            margin: 5px 0 0 0;
-            color: #555;
-            font-size: 14px;
-        }
-        .event-list {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .event-card {
-            background: white;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-        .tag {
-            background: #ffe0e2;
-            color: #ff4757;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 8px;
-        }
-        .titel {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 0 0 5px 0;
-            color: #222;
-        }
-        .dato {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 15px;
-        }
-        .knap {
-            display: block;
-            text-align: center;
-            background: #ff4757;
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 14px;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        h1 { color: #e94d58; margin-bottom: 5px; }
+        p.subtitle { color: #666; margin-bottom: 30px; }
+        .event-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 20px; }
+        .event-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .tag { background: #ffebee; color: #e94d58; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
+        .title { font-size: 18px; font-weight: bold; margin: 0 0 10px 0; color: #111; }
+        .time { color: #666; font-size: 14px; margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
+        .btn { background: #e94d58; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; text-align: center; box-sizing: border-box; }
+        .btn:hover { background: #d43f4a; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Aalborg Offline 🍻</h1>
-        <p>Hvad sker der i byen lige nu?</p>
-    </header>
+    <h1>Aalborg Offline 🍻</h1>
+    <p class="subtitle">Hvad sker der i byen lige nu?</p>
 
-    <div class="event-list" id="event-beholder">
-        <!-- Begivenhederne bliver sat ind her automatisk -->
+    <div class="event-container" id="events-list">
+        <!-- Her indsætter JavaScript automatisk de rigtige events -->
+        <p style="text-align: center; color: #666;">Henter events...</p>
     </div>
 
     <script>
-        // Her henter vi dataen fra din JSON-fil
-        fetch('events.json')
+        // Henter dataen direkte fra din opdaterede events.json
+        fetch('events.json?v=' + new Date().getTime())
             .then(response => response.json())
             .then(data => {
-                const beholder = document.getElementById('event-beholder');
-                
+                const container = document.getElementById('events-list');
+                container.innerHTML = ''; // Ryd "Henter events..." text
+
+                if(data.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: #666;">Ingen aktuelle events fundet lige nu.</p>';
+                    return;
+                }
+
                 data.forEach(event => {
                     const card = document.createElement('div');
                     card.className = 'event-card';
                     card.innerHTML = `
-                        <span class="tag">${event.sted}</span>
-                        <div class="titel">${event.titel}</div>
-                        <div class="dato">📅 ${event.dato}</div>
-                        <a href="${event.link}" target="_blank" class="knap">Se på Facebook</a>
+                        <div class="tag">${event.sted}</div>
+                        <div class="title">${event.titel}</div>
+                        <div class="time">📅 ${event.dato}</div>
+                        <a href="${event.link}" target="_blank" class="btn">Se på Facebook</a>
                     `;
-                    beholder.appendChild(card);
+                    container.appendChild(card);
                 });
             })
-            .catch(error => console.error('Fejl ved hentning af events:', error));
+            .catch(error => {
+                console.error('Fejl ved hentning af events:', error);
+                document.getElementById('events-list').innerHTML = '<p style="text-align: center; color: red;">Kunne ikke indlæse events. Prøv igen senere.</p>';
+            });
     </script>
+
 </body>
 </html>
