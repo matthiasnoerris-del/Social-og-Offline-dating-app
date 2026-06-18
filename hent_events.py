@@ -24,14 +24,14 @@ for facebook_id, bar_navn in BARER.items():
             "sted": bar_navn,
             "titel": "Kæmpe Banko & Bajere",
             "dato": "Torsdag kl. 19:00",
-            "link": f"https://www.facebook.com/{facebook_id}/events"
+            "link": f"https://www.facebook.com/{facebook_id}"
         }]
     elif facebook_id == 'elmundoaalborg':
         events = [{
             "sted": bar_navn,
             "titel": "Reggaeton Night & Fri Bar",
             "dato": "Fredag kl. 22:00",
-            "link": f"https://www.facebook.com/{facebook_id}/events"
+            "link": f"https://www.facebook.com/{facebook_id}"
         }]
     else:
         events = []
