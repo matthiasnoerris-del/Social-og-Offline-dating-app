@@ -2,9 +2,13 @@ name: Hent nye Facebook Events automatisk
 
 on:
   schedule:
-    # Denne linje betyder: Kør automatisk hver nat kl. 03:00
     - cron: '0 3 * * *'
-  workflow_dispatch: # Gør det muligt for dig at starte robotten manuelt med ét klik
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   opdater-events:
@@ -25,9 +29,13 @@ jobs:
     - name: Kør scriptet der henter Facebook events
       run: python hent_events.py
 
-    - name: Gem ændringer og opdater appen på GitHub
+    - name: Gem ændringer i events.json
       run: |
         git config --global user.name 'GitHub Actions Robot'
         git config --global user.email 'actions@github.com'
         git add events.json
         git diff --quiet && git diff --staged --quiet || (git commit -m "Automatisk opdatering af begivenheder" && git push)
+
+    # DETTE TRIN MANGLER: Det tvinger din app til at opdatere med det samme online!
+    - name: Tving GitHub Pages til at opdatere appen
+      uses: actions/deploy-pages@v2
