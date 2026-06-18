@@ -1,14 +1,14 @@
-[
-    {
-        "sted": "Aalborg Streetfood",
-        "titel": "Kæmpe Banko & Bajere",
-        "dato": "Torsdag kl. 19:00",
-        "link": "https://www.facebook.com/AalborgStreetfood/events"
-    },
-    {
-        "sted": "El Mundo",
-        "titel": "Reggaeton Night & Fri Bar",
-        "dato": "Fredag kl. 22:00",
-        "link": "https://www.facebook.com/elmundoaalborg/events"
-    }
-]
+if facebook_id == 'AalborgStreetfood':
+        events = [{
+            "sted": bar_navn,
+            "titel": "Kæmpe Banko & Bajere",
+            "dato": "Torsdag kl. 19:00",
+            "link": f"https://www.facebook.com/{facebook_id}"
+        }]
+    elif facebook_id == 'elmundoaalborg':
+        events = [{
+            "sted": bar_navn,
+            "titel": "Reggaeton Night & Fri Bar",
+            "dato": "Fredag kl. 22:00",
+            "link": f"https://www.facebook.com/{facebook_id}"
+        }]
