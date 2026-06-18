@@ -5,6 +5,7 @@ on:
     - cron: '0 3 * * *'
   workflow_dispatch:
 
+# Disse linjer sikrer, at robotten har fuld adgang til at opdatere din hjemmeside!
 permissions:
   contents: write
   pages: write
@@ -36,6 +37,11 @@ jobs:
         git add events.json
         git diff --quiet && git diff --staged --quiet || (git commit -m "Automatisk opdatering af begivenheder" && git push)
 
-    # DETTE TRIN MANGLER: Det tvinger din app til at opdatere med det samme online!
-    - name: Tving GitHub Pages til at opdatere appen
+    # Vi bruger en opdateret og mere stabil version af udrulnings-robotten her
+    - name: Upload det færdige design til Pages
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: '.'
+
+    - name: Tving GitHub Pages til at opdatere appen live
       uses: actions/deploy-pages@v2
