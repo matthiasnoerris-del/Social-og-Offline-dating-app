@@ -11,8 +11,9 @@
         .event-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 20px; }
         .event-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .tag { background: #ffebee; color: #e94d58; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
-        .title { font-size: 18px; font-weight: bold; margin: 0 0 10px 0; color: #111; }
-        .time { color: #666; font-size: 14px; margin-bottom: 15px; display: flex; align-items: center; gap: 5px; }
+        .title { font-size: 19px; font-weight: bold; margin: 0 0 5px 0; color: #111; }
+        .time { color: #222; font-size: 14px; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+        .desc { color: #555; font-size: 14px; line-height: 1.5; margin-bottom: 15px; }
         .btn { background: #e94d58; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; text-align: center; box-sizing: border-box; }
         .btn:hover { background: #d43f4a; }
     </style>
@@ -20,20 +21,18 @@
 <body>
 
     <h1>Aalborg Offline 🍻</h1>
-    <p class="subtitle">Hvad sker der i byen lige nu?</p>
+    <p class="subtitle">Kommende begivenheder i byen</p>
 
     <div class="event-container" id="events-list">
-        <!-- Her indsætter JavaScript automatisk de rigtige events -->
-        <p style="text-align: center; color: #666;">Henter events...</p>
+        <p style="text-align: center; color: #666;">Henter den opdaterede kalender...</p>
     </div>
 
     <script>
-        // Henter dataen direkte fra din opdaterede events.json
         fetch('events.json?v=' + new Date().getTime())
             .then(response => response.json())
             .then(data => {
                 const container = document.getElementById('events-list');
-                container.innerHTML = ''; // Ryd "Henter events..." text
+                container.innerHTML = '';
 
                 if(data.length === 0) {
                     container.innerHTML = '<p style="text-align: center; color: #666;">Ingen aktuelle events fundet lige nu.</p>';
@@ -47,14 +46,15 @@
                         <div class="tag">${event.sted}</div>
                         <div class="title">${event.titel}</div>
                         <div class="time">📅 ${event.dato}</div>
-                        <a href="${event.link}" target="_blank" class="btn">Se på Facebook</a>
+                        <div class="desc">${event.beskrivelse || 'Gå ikke glip af dette event!'}</div>
+                        <a href="${event.link}" target="_blank" class="btn">Besøg stedets hjemmeside</a>
                     `;
                     container.appendChild(card);
                 });
             })
             .catch(error => {
-                console.error('Fejl ved hentning af events:', error);
-                document.getElementById('events-list').innerHTML = '<p style="text-align: center; color: red;">Kunne ikke indlæse events. Prøv igen senere.</p>';
+                console.error('Fejl:', error);
+                document.getElementById('events-list').innerHTML = '<p style="text-align: center; color: red;">Kunne ikke indlæse kalenderen.</p>';
             });
     </script>
 
