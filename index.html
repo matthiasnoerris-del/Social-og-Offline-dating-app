@@ -424,7 +424,12 @@
                 });
             }).catch(() => {
                 document.getElementById('events-list').innerHTML = '<p style="text-align:center;color:red;font-weight:500;">Henter data...</p>';
-            });
+            });// Registrering af Service Worker til offline brug
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('pwabuilder-sw.js')
+    .then(reg => console.log('Service Worker registreret!', reg))
+    .catch(err => console.error('Service Worker fejl:', err));
+}
     </script>
 </body>
 </html>
