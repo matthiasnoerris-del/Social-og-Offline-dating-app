@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Offline Social & Dating App</title>
+    
+    <link rel="icon" type="image/png" href="logo.png" sizes="512x512">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="theme-color" content="#1e293b">
+
     <style>
         /* Smart, elegant og professionel skrifttype-stack (Inter / System-UI) */
         body { 
@@ -95,12 +100,10 @@
     <h1>Offline Social & Dating App</h1>
     <p class="subtitle">Tag styringen over det virkelige liv</p>
 
-    <!-- NOTIFIKATIONS-ADVARSEL -->
     <div class="notification-alert" id="saturday-warning">
         ⚠️ LØRDAGSNOTIFIKATION:<br>Du har ikke opfyldt dit ugentlige mål endnu! Kom ud af busken og tag et initiativ i dag! 🚀
     </div>
 
-    <!-- FANE 1: MÅL & REGISTRERING -->
     <div id="tab-goals" class="tab-content active">
         <div class="status-box">
             <div style="font-size: 13px; font-weight: 700; color: #64748b; letter-spacing: 0.5px;">DINE INITIATIVER DENNE UGE:</div>
@@ -109,7 +112,6 @@
             <div class="dopamin-msg" id="dopamin-alert"></div>
         </div>
 
-        <!-- LIVSTID STATISTIK -->
         <div class="stats-box">
             <div style="font-weight: 700; text-align: center; font-size: 13px; letter-spacing: 0.8px; color: #94a3b8;">🏆 SAMLEDE SUCCES I ÅR</div>
             <div class="stats-grid">
@@ -124,7 +126,6 @@
 
         <h3 style="color: #1e293b; margin-top: 15px; margin-bottom: 8px; font-size: 16px; font-weight: 700; letter-spacing: -0.2px;">Registrer handling:</h3>
         
-        <!-- REGISTRERINGSKNAPPER MED OPDATERET ELEGANT SKRIFT -->
         <button class="action-btn" onclick="registerAction('Fest / I byen 🕺')">Fest / I byen <span>🕺</span></button>
         <button class="action-btn" onclick="registerAction('Initiativ til noget socialt 🎉')">Initiativ til noget socialt (koncert, fest) <span>🎉</span></button>
         <button class="action-btn" onclick="promptSocialArrangement()">Socialt arrangement <span>📝</span></button>
@@ -133,7 +134,6 @@
         <button class="action-btn" onclick="registerAction('Naturlig samtale med en pige i hverdagen 🗣️')">Naturlig samtale med en pige i hverdagen (Supermarked, tog, osv.) <span>🗣️</span></button>
         <button class="action-btn" onclick="registerAction('Skrevet til pige på SoMe 📱')">Skrive til en pige på Insta/FB <span>📱</span></button>
         
-        <!-- SPECIFIK LOG FOR DENNE UGE -->
         <div class="history-section">
             <div class="history-title">Ugens specifikke handlinger:</div>
             <div id="weekly-log-list">
@@ -141,26 +141,22 @@
             </div>
         </div>
 
-        <!-- PROGRESSION HENOVEDE ÅRET -->
         <div class="history-section">
             <div class="history-title">Års-progression (Momentum-kalender):</div>
             <div class="progression-box" id="year-progression"></div>
             
-            <!-- FORTRYD-KNAP -->
             <button id="undo-week-btn" class="btn" style="background: #f97316; margin-top: 15px; font-size: 13px; padding: 10px; display: none;" onclick="undoArchiveWeek()">Fortryd sidste uge-afslutning ↩️</button>
         </div>
         
         <button class="btn" style="background: #475569; margin-top: 20px;" onclick="archiveAndResetWeek()">Afslut uge & Start ny uge</button>
     </div>
 
-    <!-- FANE 2: BEGIVENHEDER -->
     <div id="tab-events" class="tab-content">
         <div id="events-list">
             <p style="text-align: center; color: #64748b; font-weight: 500;">Henter dine links...</p>
         </div>
     </div>
 
-    <!-- NAVIGATION I BUNDEN -->
     <div class="nav-bar">
         <div class="nav-item active" id="btn-goals" onclick="switchTab('goals')">🎯 Mine Mål</div>
         <div class="nav-item" id="btn-events" onclick="switchTab('events')">📅 Begivenheder</div>
