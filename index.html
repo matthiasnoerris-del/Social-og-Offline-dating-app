@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aalborg Offline</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px 20px 80px 20px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px 20px 100px 20px; display: flex; flex-direction: column; align-items: center; }
         h1 { color: #e94d58; margin-bottom: 5px; }
         p.subtitle { color: #666; margin-bottom: 20px; text-align: center; }
         
@@ -24,37 +24,42 @@
         /* Mål / Dopamin interface */
         .status-box { background: #fff; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 2px dashed #e94d58; }
         .score { font-size: 32px; font-weight: bold; color: #e94d58; margin: 10px 0; }
-        .dopamin-msg { background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 10px; display: none; animation: pop 0.3s ease; }
+        .dopamin-msg { background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 10px; display: none; }
+        .notification-alert { background: #ffebee; color: #c62828; border: 2px solid #c62828; padding: 15px; border-radius: 8px; font-weight: bold; margin-bottom: 15px; display: none; text-align: center; }
         
-        .action-btn { background: white; border: 2px solid #ccc; padding: 15px; border-radius: 10px; text-align: left; font-size: 15px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .action-btn { background: white; border: 2px solid #ccc; padding: 15px; border-radius: 10px; text-align: left; font-size: 15px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; width: 100%; box-sizing: border-box; margin-bottom: 8px; }
         .action-btn:active { background: #f5f5f5; transform: scale(0.98); }
-        .action-btn span.plus { color: #e94d58; font-size: 20px; }
+        
+        /* Historik og Log-liste */
+        .history-section { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-top: 15px; }
+        .history-title { font-weight: bold; font-size: 16px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .log-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 14px; }
+        .delete-btn { color: #e94d58; background: none; border: none; cursor: pointer; font-weight: bold; }
+        
+        /* Års-progression */
+        .progression-box { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 10px; }
+        .week-chip { background: #e0e0e0; padding: 5px; text-align: center; border-radius: 6px; font-size: 11px; font-weight: bold; color: #444; }
+        .week-chip.success { background: #c8e6c9; color: #2e7d32; }
+        .week-chip.epic { background: #ffe0b2; color: #e65100; border: 1px solid #e65100; }
 
         /* Bund-navigation */
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 100; }
         .nav-item { flex: 1; text-align: center; padding: 15px 0; font-weight: bold; color: #666; cursor: pointer; font-size: 16px; }
         .nav-item.active { color: #e94d58; border-top: 3px solid #e94d58; background: #fff5f5; }
-
-        @keyframes pop {
-            0% { transform: scale(0.9); }
-            100% { transform: scale(1); }
-        }
     </style>
 </head>
 <body>
 
     <h1>Aalborg Offline 🍻</h1>
-    <p class="subtitle" id="dynamic-sub">Social & Dating Dashboard</p>
+    <p class="subtitle">Social & Dating Dashboard</p>
 
-    <!-- FANE 1: BEGIVENHEDER -->
-    <div id="tab-events" class="tab-content active">
-        <div id="events-list">
-            <p style="text-align: center; color: #666;">Henter dine links...</p>
-        </div>
+    <!-- NOTIFIKATIONS-ADVARSEL (VISES KUN LØRDAG HVIS SCORE ER 0) -->
+    <div class="notification-alert" id="saturday-warning">
+        ⚠️ LØRDAGSNOTIFIKATION:<br>Du har ikke opfyldt dit ugentlige mål endnu! Kom ud af busken og tag et initiativ i dag! 🚀
     </div>
 
-    <!-- FANE 2: MÅL & REGISTRERING -->
-    <div id="tab-goals" class="tab-content">
+    <!-- FANE 1: MÅL & REGISTRERING (ÅBNER SOM DEN FØRSTE NU) -->
+    <div id="tab-goals" class="tab-content active">
         <div class="status-box">
             <div style="font-size: 14px; font-weight: bold; color: #555;">DINE INITIATIVER DENNE UGE:</div>
             <div class="score" id="score-counter">0</div>
@@ -66,27 +71,54 @@
         
         <button class="action-btn" onclick="registerAction('Fest / I byen 🕺')">Fest / I byen <span>🕺</span></button>
         <button class="action-btn" onclick="registerAction('Initiativ til noget socialt 🎉')">Initiativ til noget socialt (koncert, fest) <span>🎉</span></button>
-        
         <button class="action-btn" onclick="promptSocialArrangement()">Socialt arrangement <span>📝</span></button>
-        
+        <button class="action-btn" onclick="registerAction('Deltagelse i Løbeklub 🏃‍♂️')">Deltagelse i Løbeklub <span>🏃‍♂️</span></button>
         <button class="action-btn" onclick="registerAction('Samtale med en pige i fitness 💪')">Samtale med en pige i fitnesscentret <span>💪</span></button>
         <button class="action-btn" onclick="registerAction('Samtale med en pige generelt 🗣️')">Samtale med en pige generelt (tog, supermarked) <span>🗣️</span></button>
         <button class="action-btn" onclick="registerAction('Skrevet til pige på SoMe 📱')">Skrive til en pige på Insta/FB <span>📱</span></button>
         
-        <button class="btn" style="background: #666; margin-top: 20px;" onclick="resetWeek()">Nulstil uge / Ny uge</button>
+        <!-- SPECIFIK LOG FOR DENNE UGE -->
+        <div class="history-section">
+            <div class="history-title">Ugens specifikke handlinger:</div>
+            <div id="weekly-log-list">
+                <p style="color:#999; font-size:13px; text-align:center;">Ingen handlinger registreret endnu.</p>
+            </div>
+        </div>
+
+        <!-- PROGRESSION HENOVEDE ÅRET -->
+        <div class="history-section">
+            <div class="history-title">Progression henover året (Uge-historik):</div>
+            <div class="progression-box" id="year-progression"></div>
+        </div>
+        
+        <button class="btn" style="background: #666; margin-top: 20px;" onclick="archiveAndResetWeek()">Afslut uge & Start ny uge</button>
+    </div>
+
+    <!-- FANE 2: BEGIVENHEDER -->
+    <div id="tab-events" class="tab-content">
+        <div id="events-list">
+            <p style="text-align: center; color: #666;">Henter dine links...</p>
+        </div>
     </div>
 
     <!-- NAVIGATION I BUNDEN -->
     <div class="nav-bar">
-        <div class="nav-item active" id="btn-events" onclick="switchTab('events')">📅 Begivenheder</div>
-        <div class="nav-item" id="btn-goals" onclick="switchTab('goals')">🎯 Mine Mål</div>
+        <div class="nav-item active" id="btn-goals" onclick="switchTab('goals')">🎯 Mine Mål</div>
+        <div class="nav-item" id="btn-events" onclick="switchTab('events')">📅 Begivenheder</div>
     </div>
 
     <script>
-        // Hent score fra telefonens hukommelse (LocalStorage)
+        // Hent data fra LocalStorage
         let currentScore = parseInt(localStorage.getItem('offline_score')) || 0;
+        let weeklyLog = JSON.parse(localStorage.getItem('weekly_log')) || [];
+        let yearlyArchive = JSON.parse(localStorage.getItem('yearly_archive')) || {};
+
+        // Startopsætning af skærmen
         document.getElementById('score-counter').innerText = currentScore;
         updateGoalText();
+        renderWeeklyLog();
+        renderYearlyProgression();
+        checkSaturdayNotification();
 
         // Skift mellem faner
         function switchTab(tab) {
@@ -96,15 +128,163 @@
             if(tab === 'events') {
                 document.getElementById('tab-events').classList.add('active');
                 document.getElementById('btn-events').classList.add('active');
-                document.getElementById('dynamic-sub').innerText = "Social & Dating Dashboard";
             } else {
                 document.getElementById('tab-goals').classList.add('active');
                 document.getElementById('btn-goals').classList.add('active');
-                document.getElementById('dynamic-sub').innerText = "Gør det godt - Hold momentum!";
             }
         }
 
-        // Hent event-links fra JSON
+        // Registrer en handling
+        function registerAction(actionName) {
+            currentScore++;
+            const timestamp = new Date().toLocaleDateString('da-DK', {weekday: 'short', hour: '2-digit', minute:'2-digit'});
+            weeklyLog.push({ id: Date.now(), name: actionName, time: timestamp });
+            
+            saveData();
+            triggerDopaminFeedback();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // Prompt og gem for socialt arrangement
+        function promptSocialArrangement() {
+            const navn = prompt("Hvilket socialt arrangement deltog du i?");
+            if(navn && navn.trim() !== "") {
+                registerAction("Socialt: " + navn.trim());
+            }
+        }
+
+        // Slet en handling ved en fejl
+        function deleteAction(id) {
+            weeklyLog = weeklyLog.filter(item => item.id !== id);
+            currentScore = weeklyLog.length; // Genberegn scoren baseret på elementer tilbage
+            saveData();
+            document.getElementById('dopamin-alert').style.display = 'none';
+        }
+
+        // Gemmer og opdaterer alt på skærmen
+        function saveData() {
+            localStorage.setItem('offline_score', currentScore);
+            localStorage.setItem('weekly_log', JSON.stringify(weeklyLog));
+            
+            document.getElementById('score-counter').innerText = currentScore;
+            updateGoalText();
+            renderWeeklyLog();
+            checkSaturdayNotification();
+        }
+
+        // Dopamin feedback beskeder
+        function triggerDopaminFeedback() {
+            const alertBox = document.getElementById('dopamin-alert');
+            alertBox.style.display = 'block';
+            if (currentScore === 1) {
+                alertBox.innerHTML = `🎉 <b>Mål opfyldt!</b> Du har taget ugens første initiativ. Mega stærkt gået!`;
+            } else if (currentScore >= 2) {
+                alertBox.innerHTML = `🔥 <b>Skide godt gået!</b> Du har taget ${currentScore} initiativer nu. Du ejer byen!`;
+            }
+        }
+
+        // Opdaterer mål-teksterne løbende
+        function updateGoalText() {
+            const status = document.getElementById('goal-status');
+            if(currentScore === 0) {
+                status.innerHTML = "❌ Du mangler dit ugentlige initiativ endnu.";
+            } else if(currentScore === 1) {
+                status.innerHTML = "✅ <b>Ugens mål opfyldt!</b> Gør det ekstra godt ved at tage ét til.";
+            } else {
+                status.innerHTML = "⭐ <b>Fantastisk!</b> Du har gjort det ekstra godt i denne uge!";
+            }
+        }
+
+        // Tegner listen med ugens specifikke tryk
+        function renderWeeklyLog() {
+            const listContainer = document.getElementById('weekly-log-list');
+            if(weeklyLog.length === 0) {
+                listContainer.innerHTML = '<p style="color:#999; font-size:13px; text-align:center;">Ingen handlinger registreret endnu.</p>';
+                return;
+            }
+            listContainer.innerHTML = '';
+            weeklyLog.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'log-item';
+                row.innerHTML = `
+                    <div><b>${item.name}</b> <span style="color:#888; font-size:11px;">(${item.time})</span></div>
+                    <button class="delete-btn" onclick="deleteAction(${item.id})">Slet ❌</button>
+                `;
+                listContainer.appendChild(row);
+            });
+        }
+
+        // Lørdags-tjek (Lokal alarm på telefonen)
+        function checkSaturdayNotification() {
+            const today = new Date();
+            const isSaturday = (today.getDay() === 6); // 6 er lørdag
+            const warningBox = document.getElementById('saturday-warning');
+            
+            if (isSaturday && currentScore === 0) {
+                warningBox.style.display = 'block';
+            } else {
+                warningBox.style.display = 'none';
+            }
+        }
+
+        // Funktion til at finde det aktuelle ugenummer
+        function getWeekNumber(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+            var startOfYear = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            var weekNo = Math.ceil(( ( (d - startOfYear) / 86400000) + 1)/7);
+            return weekNo;
+        }
+
+        // Afslut uge, arkiver resultatet til årsoversigten og nulstil
+        function archiveAndResetWeek() {
+            if(confirm("Vil du gemme denne uges score i din års-progression og starte en ny uge?")) {
+                const currentWeek = "Uge " + getWeekNumber(new Date());
+                yearlyArchive[currentWeek] = currentScore;
+                localStorage.setItem('yearly_archive', JSON.stringify(yearlyArchive));
+                
+                // Nulstil nuværende uge
+                currentScore = 0;
+                weeklyLog = [];
+                localStorage.setItem('offline_score', currentScore);
+                localStorage.setItem('weekly_log', JSON.stringify(weeklyLog));
+                
+                document.getElementById('dopamin-alert').style.display = 'none';
+                saveData();
+                renderYearlyProgression();
+            }
+        }
+
+        // Tegner års-progressionen på skærmen
+        function renderYearlyProgression() {
+            const container = document.getElementById('year-progression');
+            container.innerHTML = '';
+            
+            // Vi viser de næste 10 uger i historikken som eksempel, eller dem der er gemt
+            const totalWeeks = 52;
+            let checkWeeks = [];
+            
+            // Hent alle uger der er registreret i arkivet indtil videre
+            for (let weekKey in yearlyArchive) {
+                checkWeeks.push({name: weekKey, score: yearlyArchive[weekKey]});
+            }
+            
+            if(checkWeeks.length === 0) {
+                container.innerHTML = '<p style="color:#999; font-size:13px; text-align:center; grid-column: 1/-1;">Progressionen opbygges, efterhånden som du afslutter dine uger.</p>';
+                return;
+            }
+
+            checkWeeks.forEach(w => {
+                const chip = document.createElement('div');
+                chip.className = 'week-chip';
+                if(w.score === 1) chip.classList.add('success');
+                if(w.score >= 2) chip.classList.add('epic');
+                chip.innerHTML = `${w.name}<br><span style="font-size:14px;">${w.score}</span>`;
+                container.appendChild(chip);
+            });
+        }
+
+        // Hent event-links fra JSON (Fane 2)
         fetch('events.json?v=' + new Date().getTime())
             .then(response => response.json())
             .then(data => {
@@ -124,62 +304,8 @@
                     container.appendChild(card);
                 });
             }).catch(() => {
-                document.getElementById('events-list').innerHTML = '<p style="text-align:center;color:red;">Kør workflow først for at oprette links.</p>';
+                document.getElementById('events-list').innerHTML = '<p style="text-align:center;color:red;">Henter data...</p>';
             });
-
-        // Registrer et mål og giv dopamin-respons!
-        function registerAction(actionName) {
-            currentScore++;
-            localStorage.setItem('offline_score', currentScore);
-            document.getElementById('score-counter').innerText = currentScore;
-            
-            // Dopamin feedback system
-            const alertBox = document.getElementById('dopamin-alert');
-            alertBox.style.display = 'block';
-            
-            if (currentScore === 1) {
-                alertBox.innerHTML = `🎉 <b>Mål opfyldt!</b> Du har taget ugens første initiativ. Mega stærkt gået!`;
-                alertBox.style.background = "#e8f5e9";
-                alertBox.style.color = "#2e7d32";
-            } else if (currentScore >= 2) {
-                alertBox.innerHTML = `🔥 <b>Skide godt gået!</b> Du har taget ${currentScore} initiativer nu. Du forstærker dine sociale evner max!`;
-                alertBox.style.background = "#fff3e0";
-                alertBox.style.color = "#e65100";
-            } else {
-                alertBox.innerHTML = `👍 Registreret: ${actionName}! Godt initiativ!`;
-            }
-            
-            updateGoalText();
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
-        function promptSocialArrangement() {
-            const navn = prompt("Hvilket socialt arrangement deltog du i?");
-            if(navn) {
-                registerAction("Socialt arrangement: " + navn);
-            }
-        }
-
-        function updateGoalText() {
-            const status = document.getElementById('goal-status');
-            if(currentScore === 0) {
-                status.innerHTML = "❌ Du mangler dit ugentlige initiativ endnu.";
-            } else if(currentScore === 1) {
-                status.innerHTML = "✅ <b>Ugens mål opfyldt!</b> Tag ét til for at gøre det ekstra godt.";
-            } else {
-                status.innerHTML = "⭐ <b>Fantastisk!</b> Du har gjort det ekstra godt i denne uge!";
-            }
-        }
-
-        function resetWeek() {
-            if(confirm("Er du sikker på, at du vil starte en ny uge og nulstille tælleren?")) {
-                currentScore = 0;
-                localStorage.setItem('offline_score', currentScore);
-                document.getElementById('score-counter').innerText = currentScore;
-                document.getElementById('dopamin-alert').style.display = 'none';
-                updateGoalText();
-            }
-        }
     </script>
 </body>
 </html>
