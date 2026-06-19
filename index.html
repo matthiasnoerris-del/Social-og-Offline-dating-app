@@ -5,58 +5,181 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aalborg Offline</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px 20px 80px 20px; display: flex; flex-direction: column; align-items: center; }
         h1 { color: #e94d58; margin-bottom: 5px; }
-        p.subtitle { color: #666; margin-bottom: 30px; }
-        .event-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 20px; }
+        p.subtitle { color: #666; margin-bottom: 20px; text-align: center; }
+        
+        /* Faner */
+        .tab-content { width: 100%; max-width: 500px; display: none; }
+        .tab-content.active { display: flex; flex-direction: column; gap: 15px; }
+        
+        /* Event Kort */
         .event-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .tag { background: #ffebee; color: #e94d58; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
         .title { font-size: 19px; font-weight: bold; margin: 0 0 5px 0; color: #111; }
-        .time { color: #222; font-size: 14px; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+        .time { color: #222; font-size: 14px; font-weight: bold; margin-bottom: 10px; }
         .desc { color: #555; font-size: 14px; line-height: 1.5; margin-bottom: 15px; }
         .btn { background: #e94d58; color: white; border: none; padding: 12px; width: 100%; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; text-decoration: none; display: block; text-align: center; box-sizing: border-box; }
-        .btn:hover { background: #d43f4a; }
+        
+        /* Mål / Dopamin interface */
+        .status-box { background: #fff; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 2px dashed #e94d58; }
+        .score { font-size: 32px; font-weight: bold; color: #e94d58; margin: 10px 0; }
+        .dopamin-msg { background: #e8f5e9; color: #2e7d32; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 10px; display: none; animation: pop 0.3s ease; }
+        
+        .action-btn { background: white; border: 2px solid #ccc; padding: 15px; border-radius: 10px; text-align: left; font-size: 15px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .action-btn:active { background: #f5f5f5; transform: scale(0.98); }
+        .action-btn span.plus { color: #e94d58; font-size: 20px; }
+
+        /* Bund-navigation */
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 100; }
+        .nav-item { flex: 1; text-align: center; padding: 15px 0; font-weight: bold; color: #666; cursor: pointer; font-size: 16px; }
+        .nav-item.active { color: #e94d58; border-top: 3px solid #e94d58; background: #fff5f5; }
+
+        @keyframes pop {
+            0% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
 
     <h1>Aalborg Offline 🍻</h1>
-    <p class="subtitle">Kommende begivenheder i byen</p>
+    <p class="subtitle" id="dynamic-sub">Social & Dating Dashboard</p>
 
-    <div class="event-container" id="events-list">
-        <p style="text-align: center; color: #666;">Henter den opdaterede kalender...</p>
+    <!-- FANE 1: BEGIVENHEDER -->
+    <div id="tab-events" class="tab-content active">
+        <div id="events-list">
+            <p style="text-align: center; color: #666;">Henter dine links...</p>
+        </div>
+    </div>
+
+    <!-- FANE 2: MÅL & REGISTRERING -->
+    <div id="tab-goals" class="tab-content">
+        <div class="status-box">
+            <div style="font-size: 14px; font-weight: bold; color: #555;">DINE INITIATIVER DENNE UGE:</div>
+            <div class="score" id="score-counter">0</div>
+            <div style="font-size: 13px; color: #666;" id="goal-status">Mål: Mindst 1 om ugen</div>
+            <div class="dopamin-msg" id="dopamin-alert"></div>
+        </div>
+
+        <h3 style="color: #333; margin-top: 15px; margin-bottom: 5px;">Registrer handling:</h3>
+        
+        <button class="action-btn" onclick="registerAction('Fest / I byen 🕺')">Fest / I byen <span>🕺</span></button>
+        <button class="action-btn" onclick="registerAction('Initiativ til noget socialt 🎉')">Initiativ til noget socialt (koncert, fest) <span>🎉</span></button>
+        
+        <button class="action-btn" onclick="promptSocialArrangement()">Socialt arrangement <span>📝</span></button>
+        
+        <button class="action-btn" onclick="registerAction('Samtale med en pige i fitness 💪')">Samtale med en pige i fitnesscentret <span>💪</span></button>
+        <button class="action-btn" onclick="registerAction('Samtale med en pige generelt 🗣️')">Samtale med en pige generelt (tog, supermarked) <span>🗣️</span></button>
+        <button class="action-btn" onclick="registerAction('Skrevet til pige på SoMe 📱')">Skrive til en pige på Insta/FB <span>📱</span></button>
+        
+        <button class="btn" style="background: #666; margin-top: 20px;" onclick="resetWeek()">Nulstil uge / Ny uge</button>
+    </div>
+
+    <!-- NAVIGATION I BUNDEN -->
+    <div class="nav-bar">
+        <div class="nav-item active" id="btn-events" onclick="switchTab('events')">📅 Begivenheder</div>
+        <div class="nav-item" id="btn-goals" onclick="switchTab('goals')">🎯 Mine Mål</div>
     </div>
 
     <script>
+        // Hent score fra telefonens hukommelse (LocalStorage)
+        let currentScore = parseInt(localStorage.getItem('offline_score')) || 0;
+        document.getElementById('score-counter').innerText = currentScore;
+        updateGoalText();
+
+        // Skift mellem faner
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            if(tab === 'events') {
+                document.getElementById('tab-events').classList.add('active');
+                document.getElementById('btn-events').classList.add('active');
+                document.getElementById('dynamic-sub').innerText = "Social & Dating Dashboard";
+            } else {
+                document.getElementById('tab-goals').classList.add('active');
+                document.getElementById('btn-goals').classList.add('active');
+                document.getElementById('dynamic-sub').innerText = "Gør det godt - Hold momentum!";
+            }
+        }
+
+        // Hent event-links fra JSON
         fetch('events.json?v=' + new Date().getTime())
             .then(response => response.json())
             .then(data => {
                 const container = document.getElementById('events-list');
                 container.innerHTML = '';
-
-                if(data.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: #666;">Ingen aktuelle events fundet lige nu.</p>';
-                    return;
-                }
-
                 data.forEach(event => {
                     const card = document.createElement('div');
                     card.className = 'event-card';
+                    card.style.marginBottom = '15px';
                     card.innerHTML = `
                         <div class="tag">${event.sted}</div>
                         <div class="title">${event.titel}</div>
-                        <div class="time">📅 ${event.dato}</div>
-                        <div class="desc">${event.beskrivelse || 'Gå ikke glip af dette event!'}</div>
-                        <a href="${event.link}" target="_blank" class="btn">Besøg stedets hjemmeside</a>
+                        <div class="time">📍 ${event.dato}</div>
+                        <div class="desc">${event.beskrivelse}</div>
+                        <a href="${event.link}" target="_blank" class="btn">Åbn link direkte</a>
                     `;
                     container.appendChild(card);
                 });
-            })
-            .catch(error => {
-                console.error('Fejl:', error);
-                document.getElementById('events-list').innerHTML = '<p style="text-align: center; color: red;">Kunne ikke indlæse kalenderen.</p>';
+            }).catch(() => {
+                document.getElementById('events-list').innerHTML = '<p style="text-align:center;color:red;">Kør workflow først for at oprette links.</p>';
             });
-    </script>
 
+        // Registrer et mål og giv dopamin-respons!
+        function registerAction(actionName) {
+            currentScore++;
+            localStorage.setItem('offline_score', currentScore);
+            document.getElementById('score-counter').innerText = currentScore;
+            
+            // Dopamin feedback system
+            const alertBox = document.getElementById('dopamin-alert');
+            alertBox.style.display = 'block';
+            
+            if (currentScore === 1) {
+                alertBox.innerHTML = `🎉 <b>Mål opfyldt!</b> Du har taget ugens første initiativ. Mega stærkt gået!`;
+                alertBox.style.background = "#e8f5e9";
+                alertBox.style.color = "#2e7d32";
+            } else if (currentScore >= 2) {
+                alertBox.innerHTML = `🔥 <b>Skide godt gået!</b> Du har taget ${currentScore} initiativer nu. Du forstærker dine sociale evner max!`;
+                alertBox.style.background = "#fff3e0";
+                alertBox.style.color = "#e65100";
+            } else {
+                alertBox.innerHTML = `👍 Registreret: ${actionName}! Godt initiativ!`;
+            }
+            
+            updateGoalText();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function promptSocialArrangement() {
+            const navn = prompt("Hvilket socialt arrangement deltog du i?");
+            if(navn) {
+                registerAction("Socialt arrangement: " + navn);
+            }
+        }
+
+        function updateGoalText() {
+            const status = document.getElementById('goal-status');
+            if(currentScore === 0) {
+                status.innerHTML = "❌ Du mangler dit ugentlige initiativ endnu.";
+            } else if(currentScore === 1) {
+                status.innerHTML = "✅ <b>Ugens mål opfyldt!</b> Tag ét til for at gøre det ekstra godt.";
+            } else {
+                status.innerHTML = "⭐ <b>Fantastisk!</b> Du har gjort det ekstra godt i denne uge!";
+            }
+        }
+
+        function resetWeek() {
+            if(confirm("Er du sikker på, at du vil starte en ny uge og nulstille tælleren?")) {
+                currentScore = 0;
+                localStorage.setItem('offline_score', currentScore);
+                document.getElementById('score-counter').innerText = currentScore;
+                document.getElementById('dopamin-alert').style.display = 'none';
+                updateGoalText();
+            }
+        }
+    </script>
 </body>
 </html>
