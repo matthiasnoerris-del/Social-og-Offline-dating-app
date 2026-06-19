@@ -1,27 +1,17 @@
 {
-  "background_color": "#ffffff",
-  "dir": "ltr",
-  "display": "standalone",
-  "name": "Offline Social &amp; Dating App",
-  "orientation": "any",
-  "scope": "/",
+  "name": "Offline Social & Dating App",
   "short_name": "Offline App",
-  "start_url": "https://matthiasnoerris-del.github.io/Social-og-Offline-dating-app/",
-  "theme_color": "#1e293b",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#1e293b",
+  "theme-color": "#1e293b",
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "https://matthiasnoerris-del.github.io/Social-og-Offline-dating-app/logo.png",
-      "type": "image/png",
+      "src": "logo.png",
       "sizes": "512x512",
-      "isSquare": true,
-      "isPng": true,
-      "isWebp": false,
-      "isJpg": false,
-      "width": 512,
-      "is512x512": true,
-      "is256x256": false,
-      "is192x192": false
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ],
-  "description": "Tag styringen over det virkelige liv"
+  ]
 }
