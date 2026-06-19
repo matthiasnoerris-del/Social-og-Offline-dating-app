@@ -30,6 +30,12 @@
         .action-btn { background: white; border: 2px solid #ccc; padding: 15px; border-radius: 10px; text-align: left; font-size: 15px; font-weight: bold; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; width: 100%; box-sizing: border-box; margin-bottom: 8px; }
         .action-btn:active { background: #f5f5f5; transform: scale(0.98); }
         
+        /* Statistik boks */
+        .stats-box { background: #2c3e50; color: white; padding: 15px; border-radius: 12px; margin-top: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; font-size: 13px; }
+        .stat-item { background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px; text-align: center; }
+        .stat-val { font-size: 18px; font-weight: bold; color: #f1c40f; }
+
         /* Historik og Log-liste */
         .history-section { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-top: 15px; }
         .history-title { font-weight: bold; font-size: 16px; margin-bottom: 10px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px; }
@@ -37,10 +43,11 @@
         .delete-btn { color: #e94d58; background: none; border: none; cursor: pointer; font-weight: bold; }
         
         /* Års-progression */
-        .progression-box { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 10px; }
-        .week-chip { background: #e0e0e0; padding: 5px; text-align: center; border-radius: 6px; font-size: 11px; font-weight: bold; color: #444; }
-        .week-chip.success { background: #c8e6c9; color: #2e7d32; }
-        .week-chip.epic { background: #ffe0b2; color: #e65100; border: 1px solid #e65100; }
+        .progression-box { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 10px; }
+        .week-chip { background: #e0e0e0; padding: 8px 4px; text-align: center; border-radius: 6px; font-size: 11px; font-weight: bold; color: #777; border: 1px solid #d5d5d5; }
+        .week-chip.success { background: #c8e6c9; color: #2e7d32; border-color: #a5d6a7; }
+        .week-chip.epic { background: #fff3e0; color: #e65100; border: 2px solid #ffb74d; box-shadow: 0 2px 4px rgba(230,81,0,0.15); position: relative; }
+        .week-chip.epic::after { content: '🔥'; position: absolute; top: -6px; right: -4px; font-size: 9px; }
 
         /* Bund-navigation */
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 100; }
@@ -58,7 +65,7 @@
         ⚠️ LØRDAGSNOTIFIKATION:<br>Du har ikke opfyldt dit ugentlige mål endnu! Kom ud af busken og tag et initiativ i dag! 🚀
     </div>
 
-    <!-- FANE 1: MÅL & REGISTRERING (ÅBNER SOM DEN FØRSTE NU) -->
+    <!-- FANE 1: MÅL & REGISTRERING (ÅBNER SOM DEN FØRSTE) -->
     <div id="tab-goals" class="tab-content active">
         <div class="status-box">
             <div style="font-size: 14px; font-weight: bold; color: #555;">DINE INITIATIVER DENNE UGE:</div>
@@ -67,7 +74,20 @@
             <div class="dopamin-msg" id="dopamin-alert"></div>
         </div>
 
-        <h3 style="color: #333; margin-top: 15px; margin-bottom: 5px;">Registrer handling:</h3>
+        <!-- NYT LIVSTID STATISTIK INTERFACE -->
+        <div class="stats-box">
+            <div style="font-weight: bold; text-align: center; font-size: 14px; letter-spacing: 0.5px;">🏆 SAMLEDE SUCCES I ÅR</div>
+            <div class="stats-grid">
+                <div class="stat-item">🕺 Byen / Fest<br><span class="stat-val" id="stat-byen">0</span></div>
+                <div class="stat-item">🎉 Initiativer<br><span class="stat-val" id="stat-initiativ">0</span></div>
+                <div class="stat-item">🏃‍♂️ Løbeklub<br><span class="stat-val" id="stat-lobe">0</span></div>
+                <div class="stat-item">💪 Fitness piger<br><span class="stat-val" id="stat-fitpige">0</span></div>
+                <div class="stat-item">🗣️ Generelle piger<br><span class="stat-val" id="stat-genpige">0</span></div>
+                <div class="stat-item">📱 Skrevet SoMe<br><span class="stat-val" id="stat-some">0</span></div>
+            </div>
+        </div>
+
+        <h3 style="color: #333; margin-top: 10px; margin-bottom: 5px;">Registrer handling:</h3>
         
         <button class="action-btn" onclick="registerAction('Fest / I byen 🕺')">Fest / I byen <span>🕺</span></button>
         <button class="action-btn" onclick="registerAction('Initiativ til noget socialt 🎉')">Initiativ til noget socialt (koncert, fest) <span>🎉</span></button>
@@ -87,7 +107,7 @@
 
         <!-- PROGRESSION HENOVEDE ÅRET -->
         <div class="history-section">
-            <div class="history-title">Progression henover året (Uge-historik):</div>
+            <div class="history-title">Års-progression (Momentum-kalender):</div>
             <div class="progression-box" id="year-progression"></div>
         </div>
         
@@ -112,12 +132,16 @@
         let currentScore = parseInt(localStorage.getItem('offline_score')) || 0;
         let weeklyLog = JSON.parse(localStorage.getItem('weekly_log')) || [];
         let yearlyArchive = JSON.parse(localStorage.getItem('yearly_archive')) || {};
+        let lifeTimeStats = JSON.parse(localStorage.getItem('lifetime_stats')) || {
+            byen: 0, initiativ: 0, lobe: 0, fitpige: 0, genpige: 0, some: 0
+        };
 
         // Startopsætning af skærmen
         document.getElementById('score-counter').innerText = currentScore;
         updateGoalText();
         renderWeeklyLog();
         renderYearlyProgression();
+        calculateAndDisplayLifetimeStats();
         checkSaturdayNotification();
 
         // Skift mellem faner
@@ -140,6 +164,9 @@
             const timestamp = new Date().toLocaleDateString('da-DK', {weekday: 'short', hour: '2-digit', minute:'2-digit'});
             weeklyLog.push({ id: Date.now(), name: actionName, time: timestamp });
             
+            // Læg med det samme til lifetime counteren for dopamin
+            updateLifetimeCounter(actionName, 1);
+            
             saveData();
             triggerDopaminFeedback();
             window.scrollTo({top: 0, behavior: 'smooth'});
@@ -155,10 +182,42 @@
 
         // Slet en handling ved en fejl
         function deleteAction(id) {
+            const itemToDelete = weeklyLog.find(item => item.id === id);
+            if(itemToDelete) {
+                // Træk fra i årsstatistikken igen
+                updateLifetimeCounter(itemToDelete.name, -1);
+            }
+            
             weeklyLog = weeklyLog.filter(item => item.id !== id);
-            currentScore = weeklyLog.length; // Genberegn scoren baseret på elementer tilbage
+            currentScore = weeklyLog.length;
             saveData();
             document.getElementById('dopamin-alert').style.display = 'none';
+        }
+
+        // Hjælpefunktion til at styre årsstatistikken baseret på tekstnavne
+        function updateLifetimeCounter(name, amount) {
+            if(name.includes('Fest')) lifeTimeStats.byen += amount;
+            if(name.includes('Initiativ') || name.includes('Socialt:')) lifeTimeStats.initiativ += amount;
+            if(name.includes('Løbeklub')) lifeTimeStats.lobe += amount;
+            if(name.includes('fitness')) lifeTimeStats.fitpige += amount;
+            if(name.includes('generelt')) lifeTimeStats.genpige += amount;
+            if(name.includes('SoMe')) lifeTimeStats.some += amount;
+            
+            // Sørg for at værdier ikke kan blive negative ved slet-fejl
+            for (let key in lifeTimeStats) {
+                if(lifeTimeStats[key] < 0) lifeTimeStats[key] = 0;
+            }
+            localStorage.setItem('lifetime_stats', JSON.stringify(lifeTimeStats));
+            calculateAndDisplayLifetimeStats();
+        }
+
+        function calculateAndDisplayLifetimeStats() {
+            document.getElementById('stat-byen').innerText = lifeTimeStats.byen;
+            document.getElementById('stat-initiativ').innerText = lifeTimeStats.initiativ;
+            document.getElementById('stat-lobe').innerText = lifeTimeStats.lobe;
+            document.getElementById('stat-fitpige').innerText = lifeTimeStats.fitpige;
+            document.getElementById('stat-genpige').innerText = lifeTimeStats.genpige;
+            document.getElementById('stat-some').innerText = lifeTimeStats.some;
         }
 
         // Gemmer og opdaterer alt på skærmen
@@ -217,7 +276,7 @@
         // Lørdags-tjek (Lokal alarm på telefonen)
         function checkSaturdayNotification() {
             const today = new Date();
-            const isSaturday = (today.getDay() === 6); // 6 er lørdag
+            const isSaturday = (today.getDay() === 6);
             const warningBox = document.getElementById('saturday-warning');
             
             if (isSaturday && currentScore === 0) {
@@ -227,7 +286,6 @@
             }
         }
 
-        // Funktion til at finde det aktuelle ugenummer
         function getWeekNumber(d) {
             d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
             d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
@@ -239,7 +297,7 @@
         // Afslut uge, arkiver resultatet til årsoversigten og nulstil
         function archiveAndResetWeek() {
             if(confirm("Vil du gemme denne uges score i din års-progression og starte en ny uge?")) {
-                const currentWeek = "Uge " + getWeekNumber(new Date());
+                const currentWeek = getWeekNumber(new Date());
                 yearlyArchive[currentWeek] = currentScore;
                 localStorage.setItem('yearly_archive', JSON.stringify(yearlyArchive));
                 
@@ -255,33 +313,40 @@
             }
         }
 
-        // Tegner års-progressionen på skærmen
+        // Tegner den opgraderede års-progression på skærmen med de nye farver!
         function renderYearlyProgression() {
             const container = document.getElementById('year-progression');
             container.innerHTML = '';
             
-            // Vi viser de næste 10 uger i historikken som eksempel, eller dem der er gemt
-            const totalWeeks = 52;
-            let checkWeeks = [];
-            
-            // Hent alle uger der er registreret i arkivet indtil videre
-            for (let weekKey in yearlyArchive) {
-                checkWeeks.push({name: weekKey, score: yearlyArchive[weekKey]});
-            }
-            
-            if(checkWeeks.length === 0) {
-                container.innerHTML = '<p style="color:#999; font-size:13px; text-align:center; grid-column: 1/-1;">Progressionen opbygges, efterhånden som du afslutter dine uger.</p>';
-                return;
-            }
+            const currentWeekNum = getWeekNumber(new Date());
 
-            checkWeeks.forEach(w => {
+            // Laver felter for uge 1 til 52 automatisk så du kan se hele året foran dig
+            for (let i = 1; i <= 52; i++) {
                 const chip = document.createElement('div');
                 chip.className = 'week-chip';
-                if(w.score === 1) chip.classList.add('success');
-                if(w.score >= 2) chip.classList.add('epic');
-                chip.innerHTML = `${w.name}<br><span style="font-size:14px;">${w.score}</span>`;
+                
+                // Tjek om ugen har en gemt score i arkivet
+                let score = yearlyArchive[i];
+                
+                // Hvis ugen ikke er lukket endnu, men er den nuværende aktive uge, kan vi vise dens live-score
+                if (score === undefined && i === currentWeekNum) {
+                    score = currentScore;
+                }
+
+                if (score !== undefined) {
+                    chip.innerHTML = `Uge ${i}<br><span style="font-size:13px;">${score}</span>`;
+                    if (score === 1) {
+                        chip.classList.add('success'); // Grøn kasse
+                    } else if (score >= 2) {
+                        chip.classList.add('epic'); // Guld kasse med flamme 🔥
+                    }
+                } else {
+                    // Fremtidige uger, der endnu ikke er nået til
+                    chip.innerHTML = `Uge ${i}<br><span style="font-size:13px; opacity:0.3;">-</span>`;
+                }
+                
                 container.appendChild(chip);
-            });
+            }
         }
 
         // Hent event-links fra JSON (Fane 2)
