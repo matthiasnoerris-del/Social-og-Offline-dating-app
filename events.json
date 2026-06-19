@@ -1,35 +1,37 @@
-import json
-from datetime import datetime
-
-print(f"Starter opdatering af links: {datetime.now().strftime('%d-%m-%Y %H:%M')}")
-
-# Dine specifikke og udvalgte links til appen
-alle_events = [
+[
+    {
+        "sted": "Aalborg Streetfood",
+        "titel": "Kæmpe Banko & Bajere",
+        "dato": "Torsdag kl. 19:00",
+        "beskrivelse": "Tag vennerne med til Aalborgs hyggeligste banko! Der er kolde bajere på bordet og sprøde præmier på højkant.",
+        "link": "https://aalborgstreetfood.dk"
+    },
     {
         "sted": "El Mundo",
-        "titel": "Jazz Jam, Pop Jam mm.",
-        "dato": "Ugentlige events",
-        "beskrivelse": "Tjek de nyeste musik-events, jams og festaftener direkte på El Mundos officielle oversigt.",
-        "link": "https://www.facebook.com/elmundo9000/events"
+        "titel": "Jazz Jam",
+        "dato": "Onsdag kl. 20:00",
+        "beskrivelse": "Oplev den fedeste live jazz i intime rammer. Lokale musikere indtager scenen, og stemningen er helt i top.",
+        "link": "https://elmundo.dk"
     },
     {
-        "sted": "Facebook",
-        "titel": "Relevante Begivenheder",
-        "dato": "Personligt feed",
-        "beskrivelse": "Dine personligt tilpassede begivenheder i nærheden baseret på dine interesser.",
-        "link": "https://www.facebook.com/events?source=46&action_history=null"
+        "sted": "El Mundo",
+        "titel": "Torsdag Jam",
+        "dato": "Torsdag kl. 21:00",
+        "beskrivelse": "Scenen er åben! Kom og lyt til sprøde toner, eller grib et instrument og spil med til El Mundos legendariske jam-aften.",
+        "link": "https://elmundo.dk"
     },
     {
-        "sted": "SingleNordic",
-        "titel": "Dating & Speeddating",
-        "dato": "Kommende arrangementer",
-        "beskrivelse": "Find de nyeste speeddating-events og singlefester i området via Billetto.",
-        "link": "https://billetto.dk/users/singlenordic?utm_source=billetto+advertising&utm_medium=search+engines&utm_campaign=google&utm_content=1DK"
+        "sted": "El Mundo",
+        "titel": "Reggaeton Night & Fri Bar",
+        "dato": "Fredag kl. 22:00",
+        "beskrivelse": "Dans natten væk til de vildeste reggaeton-rytmer. Der er fri bar i udvalgte drinks den første time!",
+        "link": "https://elmundo.dk"
+    },
+    {
+        "sted": "Heidis Bier Bar",
+        "titel": "Fest for Singler",
+        "dato": "Lørdag kl. 21:00",
+        "beskrivelse": "Er du klar på at møde nye mennesker? Heidis danner rammen om Aalborgs største singlefest med ryst-sammen-lege og Afterski-stemning.",
+        "link": "https://www.heidi-bierbar.dk/aalborg"
     }
 ]
-
-# Gemmer direkte i events.json
-with open('events.json', 'w', encoding='utf-8') as f:
-    json.dump(alle_events, f, ensure_ascii=False, indent=4)
-
-print("events.json er opdateret med dine nye links!")
