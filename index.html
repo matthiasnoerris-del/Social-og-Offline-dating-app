@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aalborg Offline</title>
+    <title>Offline Social & Dating App</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px 20px 100px 20px; display: flex; flex-direction: column; align-items: center; }
-        h1 { color: #e94d58; margin-bottom: 5px; }
-        p.subtitle { color: #666; margin-bottom: 20px; text-align: center; }
+        
+        /* Stilrent Headerbillede */
+        .app-hero-image { width: 100%; max-width: 500px; height: 160px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        
+        h1 { color: #e94d58; margin-bottom: 5px; font-size: 26px; text-align: center; }
+        p.subtitle { color: #666; margin-bottom: 20px; text-align: center; margin-top: 0; font-size: 15px; }
         
         /* Faner */
         .tab-content { width: 100%; max-width: 500px; display: none; }
@@ -57,15 +61,18 @@
 </head>
 <body>
 
-    <h1>Aalborg Offline 🍻</h1>
-    <p class="subtitle">Social & Dating Dashboard</p>
+    <!-- STILRENT BILLED-ELEMENT -->
+    <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=600&q=80" alt="Socialt fællesskab" class="app-hero-image">
+
+    <h1>Offline Social & Dating App</h1>
+    <p class="subtitle">Tag styringen over det virkelige liv</p>
 
     <!-- NOTIFIKATIONS-ADVARSEL (VISES KUN LØRDAG HVIS SCORE ER 0) -->
     <div class="notification-alert" id="saturday-warning">
         ⚠️ LØRDAGSNOTIFIKATION:<br>Du har ikke opfyldt dit ugentlige mål endnu! Kom ud af busken og tag et initiativ i dag! 🚀
     </div>
 
-    <!-- FANE 1: MÅL & REGISTRERING (ÅBNER SOM DEN FØRSTE) -->
+    <!-- FANE 1: MÅL & REGISTRERING -->
     <div id="tab-goals" class="tab-content active">
         <div class="status-box">
             <div style="font-size: 14px; font-weight: bold; color: #555;">DINE INITIATIVER DENNE UGE:</div>
@@ -74,7 +81,7 @@
             <div class="dopamin-msg" id="dopamin-alert"></div>
         </div>
 
-        <!-- NYT LIVSTID STATISTIK INTERFACE -->
+        <!-- LIVSTID STATISTIK -->
         <div class="stats-box">
             <div style="font-weight: bold; text-align: center; font-size: 14px; letter-spacing: 0.5px;">🏆 SAMLEDE SUCCES I ÅR</div>
             <div class="stats-grid">
@@ -82,7 +89,7 @@
                 <div class="stat-item">🎉 Initiativer<br><span class="stat-val" id="stat-initiativ">0</span></div>
                 <div class="stat-item">🏃‍♂️ Løbeklub<br><span class="stat-val" id="stat-lobe">0</span></div>
                 <div class="stat-item">💪 Fitness piger<br><span class="stat-val" id="stat-fitpige">0</span></div>
-                <div class="stat-item">🗣️ Generelle piger<br><span class="stat-val" id="stat-genpige">0</span></div>
+                <div class="stat-item">🗣️ Hverdags piger<br><span class="stat-val" id="stat-genpige">0</span></div>
                 <div class="stat-item">📱 Skrevet SoMe<br><span class="stat-val" id="stat-some">0</span></div>
             </div>
         </div>
@@ -94,7 +101,7 @@
         <button class="action-btn" onclick="promptSocialArrangement()">Socialt arrangement <span>📝</span></button>
         <button class="action-btn" onclick="registerAction('Deltagelse i Løbeklub 🏃‍♂️')">Deltagelse i Løbeklub <span>🏃‍♂️</span></button>
         <button class="action-btn" onclick="registerAction('Samtale med en pige i fitness 💪')">Samtale med en pige i fitnesscentret <span>💪</span></button>
-        <button class="action-btn" onclick="registerAction('Samtale med en pige generelt 🗣️')">Samtale med en pige generelt (tog, supermarked) <span>🗣️</span></button>
+        <button class="action-btn" onclick="registerAction('Naturlig samtale med en pige i hverdagen 🗣️')">Naturlig samtale med en pige i hverdagen (Supermarked, tog, osv.) <span>🗣️</span></button>
         <button class="action-btn" onclick="registerAction('Skrevet til pige på SoMe 📱')">Skrive til en pige på Insta/FB <span>📱</span></button>
         
         <!-- SPECIFIK LOG FOR DENNE UGE -->
@@ -109,6 +116,9 @@
         <div class="history-section">
             <div class="history-title">Års-progression (Momentum-kalender):</div>
             <div class="progression-box" id="year-progression"></div>
+            
+            <!-- FORTRYD-KNAP -->
+            <button id="undo-week-btn" class="btn" style="background: #e67e22; margin-top: 15px; font-size: 13px; padding: 8px; display: none;" onclick="undoArchiveWeek()">Fortryd sidste uge-afslutning ↩️</button>
         </div>
         
         <button class="btn" style="background: #666; margin-top: 20px;" onclick="archiveAndResetWeek()">Afslut uge & Start ny uge</button>
@@ -132,6 +142,7 @@
         let currentScore = parseInt(localStorage.getItem('offline_score')) || 0;
         let weeklyLog = JSON.parse(localStorage.getItem('weekly_log')) || [];
         let yearlyArchive = JSON.parse(localStorage.getItem('yearly_archive')) || {};
+        let lastArchivedWeek = localStorage.getItem('last_archived_week') || null;
         let lifeTimeStats = JSON.parse(localStorage.getItem('lifetime_stats')) || {
             byen: 0, initiativ: 0, lobe: 0, fitpige: 0, genpige: 0, some: 0
         };
@@ -143,6 +154,7 @@
         renderYearlyProgression();
         calculateAndDisplayLifetimeStats();
         checkSaturdayNotification();
+        updateUndoButtonVisibility();
 
         // Skift mellem faner
         function switchTab(tab) {
@@ -164,9 +176,7 @@
             const timestamp = new Date().toLocaleDateString('da-DK', {weekday: 'short', hour: '2-digit', minute:'2-digit'});
             weeklyLog.push({ id: Date.now(), name: actionName, time: timestamp });
             
-            // Læg med det samme til lifetime counteren for dopamin
             updateLifetimeCounter(actionName, 1);
-            
             saveData();
             triggerDopaminFeedback();
             window.scrollTo({top: 0, behavior: 'smooth'});
@@ -184,7 +194,6 @@
         function deleteAction(id) {
             const itemToDelete = weeklyLog.find(item => item.id === id);
             if(itemToDelete) {
-                // Træk fra i årsstatistikken igen
                 updateLifetimeCounter(itemToDelete.name, -1);
             }
             
@@ -194,16 +203,15 @@
             document.getElementById('dopamin-alert').style.display = 'none';
         }
 
-        // Hjælpefunktion til at styre årsstatistikken baseret på tekstnavne
+        // Hjælpefunktion til at styre årsstatistikken
         function updateLifetimeCounter(name, amount) {
             if(name.includes('Fest')) lifeTimeStats.byen += amount;
             if(name.includes('Initiativ') || name.includes('Socialt:')) lifeTimeStats.initiativ += amount;
             if(name.includes('Løbeklub')) lifeTimeStats.lobe += amount;
             if(name.includes('fitness')) lifeTimeStats.fitpige += amount;
-            if(name.includes('generelt')) lifeTimeStats.genpige += amount;
+            if(name.includes('hverdagen') || name.includes('generelt')) lifeTimeStats.genpige += amount;
             if(name.includes('SoMe')) lifeTimeStats.some += amount;
             
-            // Sørg for at værdier ikke kan blive negative ved slet-fejl
             for (let key in lifeTimeStats) {
                 if(lifeTimeStats[key] < 0) lifeTimeStats[key] = 0;
             }
@@ -273,7 +281,7 @@
             });
         }
 
-        // Lørdags-tjek (Lokal alarm på telefonen)
+        // Lørdags-tjek
         function checkSaturdayNotification() {
             const today = new Date();
             const isSaturday = (today.getDay() === 6);
@@ -294,14 +302,19 @@
             return weekNo;
         }
 
-        // Afslut uge, arkiver resultatet til årsoversigten og nulstil
+        // Afslut uge
         function archiveAndResetWeek() {
             if(confirm("Vil du gemme denne uges score i din års-progression og starte en ny uge?")) {
                 const currentWeek = getWeekNumber(new Date());
-                yearlyArchive[currentWeek] = currentScore;
-                localStorage.setItem('yearly_archive', JSON.stringify(yearlyArchive));
                 
-                // Nulstil nuværende uge
+                yearlyArchive[currentWeek] = {
+                    score: currentScore,
+                    log: weeklyLog
+                };
+                
+                localStorage.setItem('yearly_archive', JSON.stringify(yearlyArchive));
+                localStorage.setItem('last_archived_week', currentWeek);
+                
                 currentScore = 0;
                 weeklyLog = [];
                 localStorage.setItem('offline_score', currentScore);
@@ -310,25 +323,58 @@
                 document.getElementById('dopamin-alert').style.display = 'none';
                 saveData();
                 renderYearlyProgression();
+                updateUndoButtonVisibility();
             }
         }
 
-        // Tegner den opgraderede års-progression på skærmen med de nye farver!
+        // FORTRYD-FUNKTION
+        function undoArchiveWeek() {
+            const lastWeek = localStorage.getItem('last_archived_week');
+            if(lastWeek && yearlyArchive[lastWeek]) {
+                if(confirm(`Vil du genåbne uge ${lastWeek} for at rette eller slette i den?`)) {
+                    currentScore = yearlyArchive[lastWeek].score;
+                    weeklyLog = yearlyArchive[lastWeek].log || [];
+                    
+                    delete yearlyArchive[lastWeek];
+                    localStorage.setItem('yearly_archive', JSON.stringify(yearlyArchive));
+                    localStorage.removeItem('last_archived_week');
+                    
+                    saveData();
+                    renderYearlyProgression();
+                    updateUndoButtonVisibility();
+                    alert(`Uge ${lastWeek} er nu åben igen! Du kan slette forkerte tryk i listen.`);
+                }
+            }
+        }
+
+        function updateUndoButtonVisibility() {
+            const lastWeek = localStorage.getItem('last_archived_week');
+            const undoBtn = document.getElementById('undo-week-btn');
+            if(lastWeek && yearlyArchive[lastWeek]) {
+                undoBtn.style.display = 'block';
+            } else {
+                undoBtn.style.display = 'none';
+            }
+        }
+
+        // Tegner års-progressionen
         function renderYearlyProgression() {
             const container = document.getElementById('year-progression');
             container.innerHTML = '';
             
             const currentWeekNum = getWeekNumber(new Date());
 
-            // Laver felter for uge 1 til 52 automatisk så du kan se hele året foran dig
             for (let i = 1; i <= 52; i++) {
                 const chip = document.createElement('div');
                 chip.className = 'week-chip';
                 
-                // Tjek om ugen har en gemt score i arkivet
-                let score = yearlyArchive[i];
+                let archiveData = yearlyArchive[i];
+                let score;
                 
-                // Hvis ugen ikke er lukket endnu, men er den nuværende aktive uge, kan vi vise dens live-score
+                if (archiveData !== undefined) {
+                    score = (typeof archiveData === 'object') ? archiveData.score : archiveData;
+                }
+                
                 if (score === undefined && i === currentWeekNum) {
                     score = currentScore;
                 }
@@ -336,12 +382,11 @@
                 if (score !== undefined) {
                     chip.innerHTML = `Uge ${i}<br><span style="font-size:13px;">${score}</span>`;
                     if (score === 1) {
-                        chip.classList.add('success'); // Grøn kasse
+                        chip.classList.add('success'); 
                     } else if (score >= 2) {
-                        chip.classList.add('epic'); // Guld kasse med flamme 🔥
+                        chip.classList.add('epic'); 
                     }
                 } else {
-                    // Fremtidige uger, der endnu ikke er nået til
                     chip.innerHTML = `Uge ${i}<br><span style="font-size:13px; opacity:0.3;">-</span>`;
                 }
                 
@@ -349,7 +394,7 @@
             }
         }
 
-        // Hent event-links fra JSON (Fane 2)
+        // Hent event-links
         fetch('events.json?v=' + new Date().getTime())
             .then(response => response.json())
             .then(data => {
