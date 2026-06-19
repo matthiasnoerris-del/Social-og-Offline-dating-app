@@ -41,7 +41,28 @@
         .dopamin-msg { background: #e8f5e9; color: #2e7d32; padding: 12px; border-radius: 10px; font-weight: 600; margin-top: 12px; display: none; font-size: 14px; line-height: 1.4; }
         .notification-alert { background: #ffebee; color: #c62828; border: 2px solid #c62828; padding: 15px; border-radius: 10px; font-weight: 700; margin-bottom: 15px; display: none; text-align: center; font-size: 14px; line-height: 1.4; }
         
-        .action-btn { background: white; border: 1px solid #e2e8f0; padding: 16px; border-radius: 12px; text-align: left; font-size: 15px; font-weight: 600; color: #2d3748; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; width: 100%; box-sizing: border-box; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.01); }
+        /* Her sikres den smarte, elegante skrifttype på knapperne */
+        .action-btn { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: white; 
+            border: 1px solid #e2e8f0; 
+            padding: 16px; 
+            border-radius: 12px; 
+            text-align: left; 
+            font-size: 15px; 
+            font-weight: 600; 
+            color: #2d3748; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            transition: all 0.2s; 
+            width: 100%; 
+            box-sizing: border-box; 
+            margin-bottom: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.01); 
+            line-height: 1.4;
+        }
         .action-btn:active { background: #f8fafc; border-color: #cbd5e1; transform: scale(0.99); }
         
         /* Statistik boks */
@@ -74,7 +95,7 @@
     <h1>Offline Social & Dating App</h1>
     <p class="subtitle">Tag styringen over det virkelige liv</p>
 
-    <!-- NOTIFIKATIONS-ADVARSEL (VISES KUN LØRDAG HVIS SCORE ER 0) -->
+    <!-- NOTIFIKATIONS-ADVARSEL -->
     <div class="notification-alert" id="saturday-warning">
         ⚠️ LØRDAGSNOTIFIKATION:<br>Du har ikke opfyldt dit ugentlige mål endnu! Kom ud af busken og tag et initiativ i dag! 🚀
     </div>
@@ -103,6 +124,7 @@
 
         <h3 style="color: #1e293b; margin-top: 15px; margin-bottom: 8px; font-size: 16px; font-weight: 700; letter-spacing: -0.2px;">Registrer handling:</h3>
         
+        <!-- REGISTRERINGSKNAPPER MED OPDATERET ELEGANT SKRIFT -->
         <button class="action-btn" onclick="registerAction('Fest / I byen 🕺')">Fest / I byen <span>🕺</span></button>
         <button class="action-btn" onclick="registerAction('Initiativ til noget socialt 🎉')">Initiativ til noget socialt (koncert, fest) <span>🎉</span></button>
         <button class="action-btn" onclick="promptSocialArrangement()">Socialt arrangement <span>📝</span></button>
