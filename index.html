@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="da">
 <head>
@@ -316,4 +317,291 @@
             saveData();
             triggerDopaminFeedback();
             window.scrollTo({top: 0, behavior: 'smooth'});
-   
+        }
+
+        function registerActionWithInstaCheck() {
+            let actionName = 'Skrevet til pige på SoMe 📱';
+            if(confirm("Lagde du også et Instagram-opslag eller en story op med dine trommer/klaver i dag? 🥁🎹")) {
+                actionName = 'Skrevet til pige på SoMe + Musik-opslag 📱🥁🎹';
+            }
+            registerAction(actionName);
+        }
+
+        function promptSocialArrangement() {
+            const navn = prompt("Hvilket socialt arrangement deltog du i?");
+            if(navn && navn.trim() !== "") {
+                const actionString = "Socialt: " + navn.trim();
+                const timestamp = new Date().toLocaleDateString('da-DK', {weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute:'2-digit'});
+                
+                registerAction(actionString);
+                
+                permanentSocialLog.push({ id: Date.now(), name: actionString, time: timestamp });
+                localStorage.setItem('permanent_social_log', JSON.stringify(permanentSocialLog));
+                renderPermanentSocialLog();
+            }
+        }
+
+        function deleteAction(id) {
+            const itemToDelete = weeklyLog.find(item => item.id === id);
+            if(itemToDelete) {
+                updateLifetimeCounter(itemToDelete.name, -1);
+            }
+            
+            weeklyLog = weeklyLog.filter(item => item.id !== id);
+            currentScore = weeklyLog.length;
+            saveData();
+            document.getElementById('dopamin-alert').style.display = 'none';
+        }
+
+        function deletePermanentSocial(id) {
+            if(confirm("Vil du slette denne sociale begivenhed permanent fra arkivet?")) {
+                permanentSocialLog = permanentSocialLog.filter(item => item.id !== id);
+                localStorage.setItem('permanent_social_log', JSON.stringify(permanentSocialLog));
+                renderPermanentSocialLog();
+            }
+        }
+
+        function updateLifetimeCounter(name, amount) {
+            if(name.includes('Fest')) lifeTimeStats.byen += amount;
+            if(name.includes('Initiativ') || name.includes('Socialt:')) lifeTimeStats.initiativ += amount;
+            if(name.includes('Løbeklub')) lifeTimeStats.lobe += amount;
+            if(name.includes('fitness') || name.includes('Fitness')) lifeTimeStats.fitpige += amount;
+            if(name.includes('hverdagen')) lifeTimeStats.genpige += amount;
+            if(name.includes('SoMe')) lifeTimeStats.some += amount;
+            if(name.includes('Fejlet forsøg')) lifeTimeStats.failed += amount;
+            
+            for (let key in lifeTimeStats) {
+                if(lifeTimeStats[key] < 0) lifeTimeStats[key] = 0;
+            }
+            localStorage.setItem('lifetime_stats', JSON.stringify(lifeTimeStats));
+            calculateAndDisplayLifetimeStats();
+        }
+
+        function saveData() {
+            localStorage.setItem('offline_score', currentScore);
+            localStorage.setItem('weekly_log', JSON.stringify(weeklyLog));
+            document.getElementById('score-counter').innerText = currentScore;
+            updateGoalText();
+            renderWeeklyLog();
+        }
+
+        function updateGoalText() {
+            const statusEl = document.getElementById('goal-status');
+            if(currentScore === 0) {
+                statusEl.innerHTML = "Mål: Mindst 1 om ugen. <span style='color:#e94d58; font-weight:700;'>Kom afsted!</span>";
+            } else if(currentScore === 1) {
+                statusEl.innerHTML = "🎯 <span style='color:#2e7d32; font-weight:700;'>Ugentligt mål opfyldt!</span> Godt arbejde!";
+            } else {
+                statusEl.innerHTML = "🔥 <span style='color:#c2410c; font-weight:800;'>Epic uge-status aktiveret!</span> Du rykker!";
+            }
+        }
+
+        function renderWeeklyLog() {
+            const listEl = document.getElementById('weekly-log-list');
+            if(weeklyLog.length === 0) {
+                listEl.innerHTML = '<p style="color:#94a3b8; font-size:13px; text-align:center; font-weight: 500;">Ingen handlinger registreret endnu.</p>';
+                return;
+            }
+            listEl.innerHTML = '';
+            weeklyLog.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'log-item';
+                div.innerHTML = `<div><strong>${item.name}</strong> <span style="color:#94a3b8; font-size:11px; margin-left:5px;">(${item.time})</span></div>
+                                 <button class="delete-btn" onclick="deleteAction(${item.id})">Slet</button>`;
+                listEl.appendChild(div);
+            });
+        }
+
+        function renderPermanentSocialLog() {
+            const listEl = document.getElementById('permanent-social-list');
+            if(permanentSocialLog.length === 0) {
+                listEl.innerHTML = '<p style="color:#94a3b8; font-size:13px; text-align:center; font-weight: 500;">Ingen sociale begivenheder gemt endnu.</p>';
+                return;
+            }
+            listEl.innerHTML = '';
+            permanentSocialLog.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'log-item';
+                div.innerHTML = `<div><span style="color:#16a34a; font-weight:700;">✔</span> <strong>${item.name.replace('Socialt: ', '')}</strong> <span style="color:#94a3b8; font-size:11px; margin-left:5px;">(${item.time})</span></div>
+                                 <button class="delete-btn" style="color: #94a3b8;" onclick="deletePermanentSocial(${item.id})">Slet</button>`;
+                listEl.appendChild(div);
+            });
+        }
+
+        function triggerDopaminFeedback() {
+            const msgEl = document.getElementById('dopamin-alert');
+            const messages = [
+                "Stærkt gået! Din hjerne takker dig for det virkelige liv! 🧠✨",
+                "Boom! Handling slår overtænkning. Fortsæt sådan! 🔥",
+                "Social muskeltræning! Du bygger karakter lige nu 📈🏋️‍♂️",
+                "Du valgte virkeligheden frem for skærmen. Respekt! 🤝"
+            ];
+            msgEl.innerText = messages[Math.floor(Math.random() * messages.length)];
+            msgEl.style.display = 'block';
+        }
+
+        function calculateAndDisplayLifetimeStats() {
+            document.getElementById('stat-byen').innerText = lifeTimeStats.byen;
+            document.getElementById('stat-initiativ').innerText = lifeTimeStats.initiativ;
+            document.getElementById('stat-lobe').innerText = lifeTimeStats.lobe;
+            document.getElementById('stat-fitpige').innerText = lifeTimeStats.fitpige;
+            document.getElementById('stat-genpige').innerText = lifeTimeStats.genpige;
+            document.getElementById('stat-some').innerText = lifeTimeStats.some;
+            document.getElementById('stat-failed').innerText = lifeTimeStats.failed;
+        }
+
+        function checkSaturdayNotification() {
+            const today = new Date();
+            const isSaturday = today.getDay() === 6;
+            if(isSaturday && currentScore === 0) {
+                document.getElementById('saturday-warning').style.display = 'block';
+            } else {
+                document.getElementById('saturday-warning').style.display = 'none';
+            }
+        }
+
+        function getWeekNumber(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+            var startOfYear = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            var weekNo = Math.ceil(( ( (d - startOfYear) / 86400000) + 1)/7);
+            return weekNo;
+        }
+
+        function renderYearlyProgression() {
+            const container = document.getElementById('year-progression');
+            container.innerHTML = '';
+            const currentWeek = getWeekNumber(new Date());
+            
+            for(let i = 1; i <= 20; i++) {
+                const chip = document.createElement('div');
+                chip.className = 'week-chip';
+                chip.innerText = 'Uge ' + i;
+                
+                if(yearlyArchive[i]) {
+                    if(yearlyArchive[i] >= 2) {
+                        chip.className = 'week-chip epic';
+                    } else if(yearlyArchive[i] >= 1) {
+                        chip.className = 'week-chip success';
+                    }
+                } else if(i === currentWeek) {
+                    chip.style.borderColor = '#e94d58';
+                    chip.style.color = '#e94d58';
+                }
+                container.appendChild(chip);
+            }
+        }
+
+        function archiveAndResetWeek() {
+            const currentWeek = getWeekNumber(new Date());
+            if(currentScore === 0) {
+                if(!confirm("Du har 0 initiativer i denne uge. Er du sikker på, at du vil afslutte ugen uden succeser?")) return;
+            }
+            
+            yearlyArchive[currentWeek] = currentScore;
+            localStorage.setItem('yearly_archive', JSON.stringify(yearlyArchive));
+            
+            localStorage.setItem('last_archived_week', currentWeek);
+            localStorage.setItem('last_archived_score', currentScore);
+            localStorage.setItem('last_archived_log', JSON.stringify(weeklyLog));
+            
+            currentScore = 0;
+            weeklyLog = [];
+            saveData();
+            renderYearlyProgression();
+            updateUndoButtonVisibility();
+            alert("Ugen er arkiveret! God vind i den nye uge! 🚀");
+        }
+
+        function updateUndoButtonVisibility() {
+            const btn = document.getElementById('undo-week-btn');
+            if(localStorage.getItem('last_archived_week')) {
+                btn.style.display = 'block';
+            } else {
+                btn.style.display = 'none';
+            }
+        }
+
+        function undoArchiveWeek() {
+            const lastWeek = localStorage.getItem('last_archived_week');
+            if(!lastWeek) return;
+            
+            if(confirm("Vil du fortryde uge-afslutningen og hente dine data tilbage for uge " + lastWeek + "?")) {
+                currentScore = parseInt(localStorage.getItem('last_archived_score')) || 0;
+                weeklyLog = JSON.parse(localStorage.getItem('last_archived_log')) || [];
+                
+                delete yearlyArchive[lastWeek];
+                localStorage.setItem('yearly_archive', JSON.stringify(yearlyArchive));
+                
+                localStorage.removeItem('last_archived_week');
+                localStorage.removeItem('last_archived_score');
+                localStorage.removeItem('last_archived_log');
+                
+                saveData();
+                renderYearlyProgression();
+                updateUndoButtonVisibility();
+            }
+        }
+
+        function tjekFitnessSpørgsmålDage() {
+            const dag = new Date().getDay();
+            const fasteDage = [3, 4, 6, 0]; // Onsdag, Torsdag, Lørdag, Søndag
+            
+            if(fasteDage.includes(dag)) {
+                const iDagStreng = new Date().toLocaleDateString('da-DK');
+                const sidsteTjek = localStorage.getItem('sidste_fitness_tjek_dato');
+                
+                if(sidsteTjek !== iDagStreng) {
+                    document.getElementById('fitness-popup-card').style.display = 'block';
+                }
+            }
+        }
+
+        function svarFitnessSodPige(svar) {
+            if(svar === true) {
+                document.getElementById('fit-q1').style.display = 'none';
+                document.getElementById('fit-q2').style.display = 'block';
+            } else {
+                gemFitnessTjekDag();
+                LukFitnessPopup("Helt i orden. Hav en god dag videre!");
+            }
+        }
+
+        function svarFitnessSnakkede(svar) {
+            if(svar === true) {
+                registerAction("Samtale med en pige i fitness 💪");
+                gemFitnessTjekDag();
+                LukFitnessPopup("Super sejt! Det er gemt som en succes! 😍");
+            } else {
+                lifeTimeStats.failed += 1;
+                localStorage.setItem('lifetime_stats', JSON.stringify(lifeTimeStats));
+                calculateAndDisplayLifetimeStats();
+                
+                const timestamp = new Date().toLocaleDateString('da-DK', {weekday: 'short', hour: '2-digit', minute:'2-digit'});
+                weeklyLog.push({ id: Date.now(), name: "Fejlet forsøg (Ikke snakket i fitness) ❌", time: timestamp });
+                saveData();
+                
+                gemFitnessTjekDag();
+                LukFitnessPopup("Øv! Men det er registreret som et forsøg. Op på hesten igen! ❌");
+            }
+        }
+
+        function gemFitnessTjekDag() {
+            const iDagStreng = new Date().toLocaleDateString('da-DK');
+            localStorage.setItem('sidste_fitness_tjek_dato', iDagStreng);
+        }
+
+        function LukFitnessPopup(besked) {
+            document.getElementById('fit-q1').style.display = 'none';
+            document.getElementById('fit-q2').style.display = 'none';
+            const statusEl = document.getElementById('fitness-popup-status');
+            statusEl.innerText = besked;
+            statusEl.style.display = 'block';
+            
+            setTimeout(() => {
+                document.getElementById('fitness-popup-card').style.display = 'none';
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
