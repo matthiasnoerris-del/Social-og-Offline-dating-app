@@ -15,32 +15,54 @@
             flex-direction: column;
             align-items: center;
         }
-        h1 { color: #1e293b; margin-bottom: 20px; font-size: 24px; text-align: center; }
+        h1 { color: #ef4444; margin-bottom: 5px; font-size: 26px; text-align: center; font-weight: 800; }
+        .subtitle { color: #64748b; font-size: 14px; text-align: center; margin-bottom: 20px; }
         .card {
             background: white;
             padding: 20px;
             border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             width: 100%;
             max-width: 400px;
             margin-bottom: 20px;
             box-sizing: border-box;
+            position: relative;
         }
+        .badge {
+            background-color: #ffe4e6;
+            color: #ef4444;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .card h2 { margin: 0 0 5px 0; font-size: 20px; color: #1e293b; }
+        .location { font-size: 14px; color: #475569; margin-bottom: 12px; font-weight: 500; }
+        .card p { font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 15px; }
+        
         .btn {
-            background-color: #1e293b;
+            background-color: #ef4444;
             color: white;
             border: none;
             padding: 12px 20px;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            box-sizing: border-box;
         }
+        .btn-dark { background-color: #1e293b; }
         .btn-secondary { background-color: #64748b; }
         .btn-danger { background-color: #ef4444; }
         .flex-btn { display: flex; gap: 10px; margin-top: 10px; }
-        input, textarea, select {
+        
+        input, textarea {
             width: 100%;
             padding: 10px;
             margin: 8px 0;
@@ -55,26 +77,30 @@
             margin: 10px 0;
         }
         .checkbox-container input { width: auto; }
+        
         .nav-tabs {
             display: flex;
             width: 100%;
-            max-width: 400px;
+            max-width: 440px;
             margin-bottom: 15px;
-            gap: 5px;
+            gap: 4px;
         }
         .tab-btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px 5px;
             background: #e2e8f0;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 12px;
+            text-align: center;
+            color: #475569;
         }
-        .tab-btn.active { background: #1e293b; color: white; }
+        .tab-btn.active { background: #ef4444; color: white; }
         .tab-content { display: none; width: 100%; max-width: 400px; }
         .tab-content.active { display: block; }
+        
         .log-item {
             background: #f1f5f9;
             padding: 10px;
@@ -94,40 +120,46 @@
 </head>
 <body>
 
-    <h1>Wingman & Social Tracker</h1>
+    <h1>Offline Social & Dating App</h1>
+    <div class="subtitle">Tag styringen over det virkelige liv</div>
 
-    <!-- Navigations Faner -->
+    <!-- 4 Separate Faner -->
     <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('log')">Log</button>
-        <button class="tab-btn" onclick="switchTab('historik')">Historik</button>
-        <button class="tab-btn" onclick="switchTab('openers')">Åbninger</button>
+        <button id="btn-tab-fitness" class="tab-btn active" onclick="switchTab('fitness')">🎯 Mine Mål</button>
+        <button id="btn-tab-social" class="tab-btn" onclick="switchTab('social')">📅 Begivenheder</button>
+        <button id="btn-tab-historik" class="tab-btn" onclick="switchTab('historik')">📊 Historik</button>
+        <button id="btn-tab-openers" class="tab-btn" onclick="switchTab('openers')">💬 Åbninger</button>
     </div>
 
-    <!-- TAB 1: LOG INDTASTNING -->
-    <div id="tab-log" class="tab-content active">
-        <!-- Fitness Popup Spørgsmål -->
-        <div id="fitness-card" class="card" style="display: none; background: #fffbeb; border: 2px solid #f59e0b;">
+    <!-- TAB 1: MINE MÅL (Fitness & Daglig Tracker) -->
+    <div id="tab-fitness" class="tab-content active">
+        <!-- Fitness Popup Spørgsmål (Lør, Søn, Ons, Tors) -->
+        <div id="fitness-card" class="card" style="background: #fffbeb; border: 2px solid #f59e0b;">
             <h3 style="margin-top:0; color: #b45309;">Trænings-tjek! 🏋️‍♂️</h3>
             <div id="q1">
-                <p>Var there en sød pige i centret, du kan snakke med?</p>
+                <p>Var der en sød pige i centret, du kan snakke med?</p>
                 <div class="flex-btn">
-                    <button class="btn" onclick="fitnessSvar('ja')">Ja</button>
+                    <button class="btn btn-dark" onclick="fitnessSvar('ja')">Ja</button>
                     <button class="btn btn-secondary" onclick="fitnessSvar('nej')">Nej</button>
                 </div>
             </div>
             <div id="q2" style="display: none;">
                 <p>Fik du snakket med hende?</p>
                 <div class="flex-btn">
-                    <button class="btn" onclick="fitnessSnakSvar('ja')">Ja 😍</button>
+                    <button class="btn btn-dark" onclick="fitnessSnakSvar('ja')">Ja 😍</button>
                     <button class="btn btn-danger" onclick="fitnessSnakSvar('nej')">Nej (Fejlet forsøg)</button>
                 </div>
             </div>
             <p id="fitness-status" style="display:none; font-weight:bold; color: #16a34a;"></p>
         </div>
+        
+        <div id="no-fitness-card" class="card" style="display: none; text-align: center; color: #64748b;">
+            <p>I dag skal du bare fokusere på dine mål! Tjek fanen <strong>Begivenheder</strong> for at finde steder at tage hen. 🚀</p>
+        </div>
 
-        <!-- Social Log -->
+        <!-- Daglig logning af sociale begivenheder og Instagram -->
         <div class="card">
-            <h3>Registrer Social Begivenhed</h3>
+            <h3>Registrer Social Succes</h3>
             <input type="date" id="social-date">
             <textarea id="social-desc" placeholder="Hvad lavede du? Hvem mødte du?"></textarea>
             
@@ -136,11 +168,43 @@
                 <label for="insta-post">Instagram opslag med trommer/klaver 🥁🎹</label>
             </div>
 
-            <button class="btn" onclick="gemSocial()">Gem Begivenhed</button>
+            <button class="btn btn-dark" onclick="gemSocial()">Gem for altid</button>
         </div>
     </div>
 
-    <!-- TAB 2: HISTORIK -->
+    <!-- TAB 2: BEGIVENHEDER (Genskabt præcis fra dit skærmbillede!) -->
+    <div id="tab-social" class="tab-content">
+        
+        <!-- Kort 1: El Mundo -->
+        <div class="card">
+            <div class="badge">El Mundo</div>
+            <h2>Jazz Jam, Pop Jam mm.</h2>
+            <div class="location">📍 Ugentlige events</div>
+            <p>Tjek de nyeste musik-events, jams og festaftener direkte på El Mundos officielle oversigt.</p>
+            <a href="https://www.elmundo.dk" target="_blank" class="btn">Åbn link direkte</a>
+        </div>
+
+        <!-- Kort 2: Facebook -->
+        <div class="card">
+            <div class="badge">Facebook</div>
+            <h2>Relevante Begivenheder</h2>
+            <div class="location">📍 Personligt feed</div>
+            <p>Dine personligt tilpassede begivenheder i nærheden baseret på dine interesser og netværk.</p>
+            <a href="https://www.facebook.com/events" target="_blank" class="btn">Åbn link direkte</a>
+        </div>
+
+        <!-- Kort 3: SingleNordic / Billetto -->
+        <div class="card">
+            <div class="badge">SingleNordic</div>
+            <h2>Dating & Speeddating</h2>
+            <div class="location">📍 Kommende arrangementer</div>
+            <p>Find de nyeste speeddating-events og singlefester i området via Billetto.</p>
+            <a href="https://billetto.dk" target="_blank" class="btn">Åbn link direkte</a>
+        </div>
+
+    </div>
+
+    <!-- TAB 3: HISTORIK & STATISTIK -->
     <div id="tab-historik" class="tab-content">
         <div class="card">
             <h3>Fitness Statistik</h3>
@@ -151,11 +215,11 @@
 
         <div class="card">
             <h3>Gemte Sociale Begivenheder</h3>
-            <div id="social-historik-liste">Inget gemt endnu...</div>
+            <div id="social-historik-liste">Intet gemt endnu...</div>
         </div>
     </div>
 
-    <!-- TAB 3: ÅBNINGSREPLIKKER -->
+    <!-- TAB 4: ÅBNINGSREPLIKKER -->
     <div id="tab-openers" class="tab-content">
         <div class="card">
             <h3>I Fitnesscentret 🏋️‍♂️</h3>
@@ -185,20 +249,20 @@
     </div>
 
     <script>
-        // Skift faner
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
             document.getElementById('tab-' + tabName).classList.add('active');
-            event.target.classList.add('active');
+            document.getElementById('btn-tab-' + tabName).classList.add('active');
+            
             if(tabName === 'historik') opdaterHistorik();
         }
 
-        // Sæt dags dato i input
         document.getElementById('social-date').valueAsDate = new Date();
 
-        // --- FITNESS FUNKTIONER ---
-        const traeningsDage = [0, 3, 4, 6]; // 0=Søndag, 3=Onsdag, 4=Torsdag, 6=Lørdag
+        // --- FITNESS PARSING ---
+        const traeningsDage = [0, 3, 4, 6]; // 0=Søn, 3=Ons, 4=Tor, 6=Lør
         const idag = new Date();
         const ugedag = idag.getDay();
         const datoStreng = idatTilStreng(idag);
@@ -207,14 +271,15 @@
             return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
         }
 
-        // Tjek om der skal spørges i dag
-        if (traeningsDage.includes(ugedag)) {
-            let fitnessLog = JSON.parse(localStorage.getItem('fitnessLog')) || [];
-            let alleredeSvaret = fitnessLog.some(log => log.dato === datoStreng);
-            
-            if (!alleredeSvaret) {
-                document.getElementById('fitness-card').style.display = 'block';
-            }
+        let fitnessLog = JSON.parse(localStorage.getItem('fitnessLog')) || [];
+        let alleredeSvaret = fitnessLog.some(log => log.dato === datoStreng);
+
+        if (traeningsDage.includes(ugedag) && !alleredeSvaret) {
+            document.getElementById('fitness-card').style.display = 'block';
+            document.getElementById('no-fitness-card').style.display = 'none';
+        } else {
+            document.getElementById('fitness-card').style.display = 'none';
+            document.getElementById('no-fitness-card').style.display = 'block';
         }
 
         function fitnessSvar(svar) {
@@ -232,7 +297,7 @@
                 gemFitnessResultat(true, true);
                 visFitnessStatus("Stærkt gået! Du er for vild! 🔥");
             } else {
-                gemFitnessResultat(true, false); // Spottet pige, men fejlet/ikke snakket forsøg
+                gemFitnessResultat(true, false);
                 visFitnessStatus("Registreret som et forsøg. Næste gang snakker du med hende!");
             }
         }
@@ -255,8 +320,7 @@
             status.style.display = 'block';
         }
 
-
-        // --- SOCIAL LOG FUNKTIONER (GEMMER PERMANENT) ---
+        // --- SOCIALE FUNKTIONER ---
         function gemSocial() {
             const dato = document.getElementById('social-date').value;
             const desc = document.getElementById('social-desc').value;
@@ -265,25 +329,15 @@
             if(!desc) { alert("Skriv venligst lidt om hvad du lavede."); return; }
 
             let socialLog = JSON.parse(localStorage.getItem('socialLog')) || [];
-            
-            // Tilføj den nye begivenhed permanent
-            socialLog.push({
-                dato: dato,
-                beskrivelse: desc,
-                instagram: insta
-            });
-
+            socialLog.push({ dato: dato, beskrivelse: desc, instagram: insta });
             localStorage.setItem('socialLog', JSON.stringify(socialLog));
 
-            // Nulstil felter
             document.getElementById('social-desc').value = '';
             document.getElementById('insta-post').checked = false;
-            alert("Social begivenhed gemt for altid!");
+            alert("Social begivenhed gemt permanent!");
         }
 
-        // --- OPDATER HISTORIK ---
         function opdaterHistorik() {
-            // Fitness stats
             let fitnessLog = JSON.parse(localStorage.getItem('fitnessLog')) || [];
             let spottetCount = fitnessLog.filter(l => l.spottet).length;
             let talkedCount = fitnessLog.filter(l => l.snakket).length;
@@ -293,18 +347,15 @@
             document.getElementById('stat-talked').innerText = talkedCount;
             document.getElementById('stat-failed').innerText = failedCount;
 
-            // Social liste (INGEN SLETNING EFTER EN UGE)
             let socialLog = JSON.parse(localStorage.getItem('socialLog')) || [];
             let listeDiv = document.getElementById('social-historik-liste');
             
             if(socialLog.length === 0) {
-                listeDiv.innerHTML = "Inget gemt endnu...";
+                listeDiv.innerHTML = "Intet gemt endnu...";
                 return;
             }
 
-            // Sorter efter nyeste dato først
             socialLog.sort((a,b) => new Date(b.dato) - new Date(a.dato));
-
             listeDiv.innerHTML = '';
             socialLog.forEach(item => {
                 let div = document.createElement('div');
@@ -315,11 +366,10 @@
             });
         }
 
-        // Registrering af Service Worker til offline brug
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('Service Worker registreret!', reg))
-            .catch(err => console.error('Service Worker fejl:', err));
+            .then(reg => console.log('SW Ok!'))
+            .catch(err => console.error('SW Fejl:', err));
         }
     </script>
 </body>
