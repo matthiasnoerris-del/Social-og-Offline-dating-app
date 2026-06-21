@@ -1,228 +1,220 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-    <link rel="manifest" href="manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Offline Social & Dating App</title>
+    
+    <link rel="icon" type="image/png" href="logo.png" sizes="512x512">
+    <link rel="apple-touch-icon" href="logo.png">
+    <meta name="theme-color" content="#1e293b">
+
     <style>
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f8fafc;
-            margin: 0;
-            padding: 20px 20px 100px 20px;
-            display: flex;
-            flex-direction: column;
+        /* Smart, elegant og professionel skrifttype-stack (Inter / System-UI) */
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #f8f9fa; 
+            margin: 0; 
+            padding: 40px 20px 100px 20px; 
+            display: flex; 
+            flex-direction: column; 
             align-items: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        h1 { color: #ef4444; margin-bottom: 5px; font-size: 26px; text-align: center; font-weight: 800; }
-        .subtitle { color: #64748b; font-size: 14px; text-align: center; margin-bottom: 20px; }
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 400px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-            position: relative;
-        }
-        .badge {
-            background-color: #ffe4e6;
-            color: #ef4444;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-        .card h2 { margin: 0 0 5px 0; font-size: 20px; color: #1e293b; }
-        .location { font-size: 14px; color: #475569; margin-bottom: 12px; font-weight: 500; }
-        .card p { font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 15px; }
         
-        .btn {
-            background-color: #ef4444;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            width: 100%;
-            margin-top: 5px;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-            box-sizing: border-box;
-        }
+        h1 { color: #e94d58; margin-bottom: 6px; font-size: 28px; font-weight: 800; text-align: center; letter-spacing: -0.5px; }
+        p.subtitle { color: #6c757d; margin-bottom: 25px; text-align: center; margin-top: 0; font-size: 15px; font-weight: 500; }
+        
+        /* Faner */
+        .tab-content { width: 100%; max-width: 500px; display: none; }
+        .tab-content.active { display: flex; flex-direction: column; gap: 15px; }
+        
+        /* Event Kort */
+        .event-card { background: white; padding: 20px; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #eaeaea; margin-bottom: 15px; width: 100%; box-sizing: border-box; }
+        .tag { background: #ffebee; color: #e94d58; padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; display: inline-block; margin-bottom: 12px; letter-spacing: 0.3px; text-transform: none; }
+        .title { font-size: 20px; font-weight: 700; margin: 0 0 6px 0; color: #1a1a1a; letter-spacing: -0.3px; }
+        .time { color: #2b2b2b; font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+        .desc { color: #4a5568; font-size: 14px; line-height: 1.6; margin-bottom: 18px; font-weight: 400; }
+        
+        .btn { background: #e94d58; color: white; border: none; padding: 14px; width: 100%; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; display: block; text-align: center; box-sizing: border-box; transition: background 0.2s; letter-spacing: -0.1px; }
+        .btn:active { background: #d43d47; }
+        .flex-btn { display: flex; gap: 10px; margin-top: 10px; }
         .btn-dark { background-color: #1e293b; }
         .btn-secondary { background-color: #64748b; }
-        .btn-danger { background-color: #ef4444; }
-        .flex-btn { display: flex; gap: 10px; margin-top: 10px; }
         
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            box-sizing: border-box;
-        }
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 10px 0;
-        }
-        .checkbox-container input { width: auto; }
+        /* Mål / Dopamin interface */
+        .status-box { background: #fff; padding: 24px; border-radius: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border: 2px dashed #e94d58; }
+        .score { font-size: 36px; font-weight: 800; color: #e94d58; margin: 12px 0; letter-spacing: -1px; }
+        .dopamin-msg { background: #e8f5e9; color: #2e7d32; padding: 12px; border-radius: 10px; font-weight: 600; margin-top: 12px; display: none; font-size: 14px; line-height: 1.4; }
+        .notification-alert { background: #ffebee; color: #c62828; border: 2px solid #c62828; padding: 15px; border-radius: 10px; font-weight: 700; margin-bottom: 15px; display: none; text-align: center; font-size: 14px; line-height: 1.4; }
         
-        .nav-tabs {
-            display: flex;
-            width: 100%;
-            max-width: 440px;
-            margin-bottom: 15px;
-            gap: 4px;
+        /* Her sikres den smarte, elegante skrifttype på knapperne */
+        .action-btn { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: white; 
+            border: 1px solid #e2e8f0; 
+            padding: 16px; 
+            border-radius: 12px; 
+            text-align: left; 
+            font-size: 15px; 
+            font-weight: 600; 
+            color: #2d3748; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            transition: all 0.2s; 
+            width: 100%; 
+            box-sizing: border-box; 
+            margin-bottom: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.01); 
+            line-height: 1.4;
         }
-        .tab-btn {
-            flex: 1;
-            padding: 12px 5px;
-            background: #e2e8f0;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 12px;
-            text-align: center;
-            color: #475569;
-        }
-        .tab-btn.active { background: #ef4444; color: white; }
-        .tab-content { display: none; width: 100%; max-width: 400px; }
-        .tab-content.active { display: block; }
+        .action-btn:active { background: #f8fafc; border-color: #cbd5e1; transform: scale(0.99); }
         
-        .log-item {
-            background: #f1f5f9;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        .icebreaker {
-            background: #f0fdf4;
-            border-left: 4px solid #22c55e;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
+        /* Statistik boks */
+        .stats-box { background: #1e293b; color: white; padding: 18px; border-radius: 16px; margin-top: 5px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; font-size: 13px; }
+        .stat-item { background: rgba(255,255,255,0.06); padding: 10px; border-radius: 8px; text-align: center; font-weight: 500; color: #cbd5e1; }
+        .stat-val { font-size: 20px; font-weight: 700; color: #f59e0b; margin-top: 2px; display: block; }
+
+        /* Historik og Log-liste */
+        .history-section { background: white; padding: 18px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-top: 15px; border: 1px solid #eaeaea; }
+        .history-title { font-weight: 700; font-size: 15px; margin-bottom: 12px; color: #1a1a1a; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; letter-spacing: -0.2px; }
+        .log-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f8fafc; font-size: 14px; font-weight: 500; color: #334155; }
+        .delete-btn { color: #e94d58; background: none; border: none; cursor: pointer; font-weight: 700; font-size: 13px; padding: 4px 8px; }
+        
+        /* Års-progression */
+        .progression-box { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 12px; }
+        .week-chip { background: #f1f5f9; padding: 10px 4px; text-align: center; border-radius: 8px; font-size: 11px; font-weight: 700; color: #94a3b8; border: 1px solid #e2e8f0; }
+        .week-chip.success { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+        .week-chip.epic { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; box-shadow: 0 2px 4px rgba(194,65,12,0.05); position: relative; }
+        .week-chip.epic::after { content: '🔥'; position: absolute; top: -7px; right: -4px; font-size: 9px; }
+
+        /* Bund-navigation */
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; box-shadow: 0 -4px 12px rgba(0,0,0,0.04); z-index: 100; border-top: 1px solid #eaeaea; }
+        .nav-item { flex: 1; text-align: center; padding: 18px 0; font-weight: 700; color: #64748b; cursor: pointer; font-size: 14px; transition: all 0.2s; letter-spacing: -0.2px; }
+        .nav-item.active { color: #e94d58; border-top: 3px solid #e94d58; background: #fffafb; padding-top: 15px; }
+
+        /* Icebreaker Styling */
+        .icebreaker { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-size: 14px; color: #1e293b; }
     </style>
 </head>
 <body>
 
     <h1>Offline Social & Dating App</h1>
-    <div class="subtitle">Tag styringen over det virkelige liv</div>
+    <p class="subtitle">Tag styringen over det virkelige liv</p>
 
-    <!-- 4 Separate Faner -->
-    <div class="nav-tabs">
-        <button id="btn-tab-fitness" class="tab-btn active" onclick="switchTab('fitness')">🎯 Mine Mål</button>
-        <button id="btn-tab-social" class="tab-btn" onclick="switchTab('social')">📅 Begivenheder</button>
-        <button id="btn-tab-historik" class="tab-btn" onclick="switchTab('historik')">📊 Historik</button>
-        <button id="btn-tab-openers" class="tab-btn" onclick="switchTab('openers')">💬 Åbninger</button>
+    <div class="notification-alert" id="saturday-warning">
+        ⚠️ LØRDAGSNOTIFIKATION:<br>Du har ikke opfyldt dit ugentlige mål endnu! Kom ud af busken og tag et initiativ i dag! 🚀
     </div>
 
-    <!-- TAB 1: MINE MÅL (Fitness & Daglig Tracker) -->
-    <div id="tab-fitness" class="tab-content active">
-        <!-- Fitness Popup Spørgsmål (Lør, Søn, Ons, Tors) -->
-        <div id="fitness-card" class="card" style="background: #fffbeb; border: 2px solid #f59e0b;">
-            <h3 style="margin-top:0; color: #b45309;">Trænings-tjek! 🏋️‍♂️</h3>
-            <div id="q1">
-                <p>Var der en sød pige i centret, du kan snakke med?</p>
-                <div class="flex-btn">
-                    <button class="btn btn-dark" onclick="fitnessSvar('ja')">Ja</button>
-                    <button class="btn btn-secondary" onclick="fitnessSvar('nej')">Nej</button>
-                </div>
-            </div>
-            <div id="q2" style="display: none;">
-                <p>Fik du snakket med hende?</p>
-                <div class="flex-btn">
-                    <button class="btn btn-dark" onclick="fitnessSnakSvar('ja')">Ja 😍</button>
-                    <button class="btn btn-danger" onclick="fitnessSnakSvar('nej')">Nej (Fejlet forsøg)</button>
-                </div>
-            </div>
-            <p id="fitness-status" style="display:none; font-weight:bold; color: #16a34a;"></p>
-        </div>
+    <!-- TAB 1: MINE MÅL -->
+    <div id="tab-goals" class="tab-content active">
         
-        <div id="no-fitness-card" class="card" style="display: none; text-align: center; color: #64748b;">
-            <p>I dag skal du bare fokusere på dine mål! Tjek fanen <strong>Begivenheder</strong> for at finde steder at tage hen. 🚀</p>
+        <!-- NYT: Dynamisk Fitness Popup Spørgsmål -->
+        <div id="fitness-popup-card" class="event-card" style="background: #fffbeb; border: 2px solid #f59e0b; display: none;">
+            <div class="tag" style="background: #fef3c7; color: #b45309;">Trænings-tjek! 🏋️‍♂️</div>
+            <div id="fit-q1">
+                <p style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: #78350f;">Var there en sød pige i centret, du kan snakke med?</p>
+                <div class="flex-btn">
+                    <button class="btn btn-dark" onclick="svarFitnessSpottet(true)">Ja</button>
+                    <button class="btn btn-secondary" onclick="svarFitnessSpottet(false)">Nej</button>
+                </div>
+            </div>
+            <div id="fit-q2" style="display: none;">
+                <p style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: #78350f;">Fik du snakket med hende?</p>
+                <div class="flex-btn">
+                    <button class="btn" style="background: #16a34a;" onclick="svarFitnessSnak(true)">Ja 😍</button>
+                    <button class="btn btn-secondary" style="background: #dc2626;" onclick="svarFitnessSnak(false)">Nej (Fejlet forsøg)</button>
+                </div>
+            </div>
+            <p id="fitness-popup-status" style="display:none; font-weight:bold; color: #16a34a; margin: 5px 0 0 0; font-size: 14px;"></p>
         </div>
 
-        <!-- Daglig logning af sociale begivenheder og Instagram -->
-        <div class="card">
-            <h3>Registrer Social Succes</h3>
-            <input type="date" id="social-date">
-            <textarea id="social-desc" placeholder="Hvad lavede du? Hvem mødte du?"></textarea>
+        <div class="status-box">
+            <div style="font-size: 13px; font-weight: 700; color: #64748b; letter-spacing: 0.5px;">DINE INITIATIVER DENNE UGE:</div>
+            <div class="score" id="score-counter">0</div>
+            <div style="font-size: 13px; color: #475569; font-weight: 500;" id="goal-status">Mål: Mindst 1 om ugen</div>
+            <div class="dopamin-msg" id="dopamin-alert"></div>
+        </div>
+
+        <div class="stats-box">
+            <div style="font-weight: 700; text-align: center; font-size: 13px; letter-spacing: 0.8px; color: #94a3b8;">🏆 SAMLEDE SUCCES I ÅR</div>
+            <div class="stats-grid">
+                <div class="stat-item">🕺 Byen / Fest<br><span class="stat-val" id="stat-byen">0</span></div>
+                <div class="stat-item">🎉 Initiativer<br><span class="stat-val" id="stat-initiativ">0</span></div>
+                <div class="stat-item">🏃‍♂️ Løbeklub<br><span class="stat-val" id="stat-lobe">0</span></div>
+                <div class="stat-item">💪 Fitness piger<br><span class="stat-val" id="stat-fitpige">0</span></div>
+                <div class="stat-item">🗣️ Hverdags piger<br><span class="stat-val" id="stat-genpige">0</span></div>
+                <div class="stat-item">📱 Skrevet SoMe<br><span class="stat-val" id="stat-some">0</span></div>
+                <!-- NY: Tæller til ikke grebne chancer -->
+                <div class="stat-item" style="grid-column: span 2; background: rgba(220, 38, 38, 0.1);">❌ Fejlede forsøg (Ikke snakket)<br><span class="stat-val" id="stat-failed" style="color: #ef4444;">0</span></div>
+            </div>
+        </div>
+
+        <h3 style="color: #1e293b; margin-top: 15px; margin-bottom: 8px; font-size: 16px; font-weight: 700; letter-spacing: -0.2px;">Registrer handling:</h3>
+        
+        <button class="action-btn" onclick="registerAction('Fest / I byen 🕺')">Fest / I byen <span>🕺</span></button>
+        <button class="action-btn" onclick="registerAction('Initiativ til noget socialt 🎉')">Initiativ til noget socialt (koncert, fest) <span>🎉</span></button>
+        <button class="action-btn" onclick="promptSocialArrangement()">Socialt arrangement <span>📝</span></button>
+        <button class="action-btn" onclick="registerAction('Deltagelse i Løbeklub 🏃‍♂️')">Deltagelse i Løbeklub <span>🏃‍♂️</span></button>
+        <button class="action-btn" onclick="registerAction('Samtale med en pige i fitness 💪')">Samtale med en pige i fitnesscentret <span>💪</span></button>
+        <button class="action-btn" onclick="registerAction('Naturlig samtale med en pige i hverdagen 🗣️')">Naturlig samtale med en pige i hverdagen (Supermarked, tog, osv.) <span>🗣️</span></button>
+        <button class="action-btn" onclick="registerActionWithInstaCheck()">Skrive til en pige på Insta/FB <span>📱</span></button>
+        
+        <div class="history-section">
+            <div class="history-title">Ugens specifikke handlinger:</div>
+            <div id="weekly-log-list">
+                <p style="color:#94a3b8; font-size:13px; text-align:center; font-weight: 500;">Ingen handlinger registreret endnu.</p>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="history-title">Års-progression (Momentum-kalender):</div>
+            <div class="progression-box" id="year-progression"></div>
             
-            <div class="checkbox-container">
-                <input type="checkbox" id="insta-post">
-                <label for="insta-post">Instagram opslag med trommer/klaver 🥁🎹</label>
-            </div>
-
-            <button class="btn btn-dark" onclick="gemSocial()">Gem for altid</button>
+            <button id="undo-week-btn" class="btn" style="background: #f97316; margin-top: 15px; font-size: 13px; padding: 10px; display: none;" onclick="undoArchiveWeek()">Fortryd sidste uge-afslutning ↩️</button>
         </div>
+        
+        <button class="btn" style="background: #475569; margin-top: 20px;" onclick="archiveAndResetWeek()">Afslut uge & Start ny uge</button>
     </div>
 
-    <!-- TAB 2: BEGIVENHEDER (Genskabt præcis fra dit skærmbillede!) -->
-    <div id="tab-social" class="tab-content">
-        
+    <!-- TAB 2: BEGIVENHEDER (Genskabt præcis fra dit screenshot) -->
+    <div id="tab-events" class="tab-content">
         <!-- Kort 1: El Mundo -->
-        <div class="card">
-            <div class="badge">El Mundo</div>
-            <h2>Jazz Jam, Pop Jam mm.</h2>
-            <div class="location">📍 Ugentlige events</div>
-            <p>Tjek de nyeste musik-events, jams og festaftener direkte på El Mundos officielle oversigt.</p>
+        <div class="event-card">
+            <div class="tag">El Mundo</div>
+            <div class="title">Jazz Jam, Pop Jam mm.</div>
+            <div class="time">📍 Ugentlige events</div>
+            <div class="desc">Tjek de nyeste musik-events, jams og festaftener direkte på El Mundos officielle oversigt.</div>
             <a href="https://www.elmundo.dk" target="_blank" class="btn">Åbn link direkte</a>
         </div>
 
         <!-- Kort 2: Facebook -->
-        <div class="card">
-            <div class="badge">Facebook</div>
-            <h2>Relevante Begivenheder</h2>
-            <div class="location">📍 Personligt feed</div>
-            <p>Dine personligt tilpassede begivenheder i nærheden baseret på dine interesser og netværk.</p>
+        <div class="event-card">
+            <div class="tag">Facebook</div>
+            <div class="title">Relevante Begivenheder</div>
+            <div class="time">📍 Personligt feed</div>
+            <div class="desc">Dine personligt tilpassede begivenheder i nærheden baseret på dine interesser og netværk.</div>
             <a href="https://www.facebook.com/events" target="_blank" class="btn">Åbn link direkte</a>
         </div>
 
         <!-- Kort 3: SingleNordic / Billetto -->
-        <div class="card">
-            <div class="badge">SingleNordic</div>
-            <h2>Dating & Speeddating</h2>
-            <div class="location">📍 Kommende arrangementer</div>
-            <p>Find de nyeste speeddating-events og singlefester i området via Billetto.</p>
+        <div class="event-card">
+            <div class="tag">SingleNordic</div>
+            <div class="title">Dating & Speeddating</div>
+            <div class="time">📍 Kommende arrangementer</div>
+            <div class="desc">Find de nyeste speeddating-events og singlefester i området via Billetto.</div>
             <a href="https://billetto.dk" target="_blank" class="btn">Åbn link direkte</a>
         </div>
-
     </div>
 
-    <!-- TAB 3: HISTORIK & STATISTIK -->
-    <div id="tab-historik" class="tab-content">
-        <div class="card">
-            <h3>Fitness Statistik</h3>
-            <p>Søde piger spottet: <span id="stat-spotted">0</span></p>
-            <p>Samtaler startet: <span id="stat-talked">0</span></p>
-            <p>Fejlede forsøg (Ikke snakket): <span id="stat-failed">0</span></p>
-        </div>
-
-        <div class="card">
-            <h3>Gemte Sociale Begivenheder</h3>
-            <div id="social-historik-liste">Intet gemt endnu...</div>
-        </div>
-    </div>
-
-    <!-- TAB 4: ÅBNINGSREPLIKKER -->
+    <!-- TAB 3: ÅBNINGSREPLIKKER -->
     <div id="tab-openers" class="tab-content">
-        <div class="card">
-            <h3>I Fitnesscentret 🏋️‍♂️</h3>
+        <div class="event-card">
+            <h3 style="margin-top:0; color:#1e293b;">I Fitnesscentret 🏋️‍♂️</h3>
             <div class="icebreaker">
                 <strong>Klassikeren (Hjælp):</strong><br>
                 "Hej, kan du hjælpe med at spotte på mit sidste sæt? (Bænkpres)"<br>
@@ -239,8 +231,8 @@
             </div>
         </div>
 
-        <div class="card">
-            <h3>Generelle åbninger ☕</h3>
+        <div class="event-card">
+            <h3 style="margin-top:0; color:#1e293b;">Generelle åbninger ☕</h3>
             <div class="icebreaker">
                 <strong>Direkte og ærlig:</strong><br>
                 "Hej, jeg lagde lige mærke til dig, og tænkte jeg blev nødt til at sige hej. Jeg hedder..."
@@ -248,129 +240,99 @@
         </div>
     </div>
 
+    <!-- Opdateret Bund-navigation med 3 faner -->
+    <div class="nav-bar">
+        <div class="nav-item active" id="btn-goals" onclick="switchTab('goals')">🎯 Mine Mål</div>
+        <div class="nav-item" id="btn-events" onclick="switchTab('events')">📅 Begivenheder</div>
+        <div class="nav-item" id="btn-openers" onclick="switchTab('openers')">💬 Åbninger</div>
+    </div>
+
     <script>
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        let currentScore = parseInt(localStorage.getItem('offline_score')) || 0;
+        let weeklyLog = JSON.parse(localStorage.getItem('weekly_log')) || [];
+        let yearlyArchive = JSON.parse(localStorage.getItem('yearly_archive')) || {};
+        let lastArchivedWeek = localStorage.getItem('last_archived_week') || null;
+        let lifeTimeStats = JSON.parse(localStorage.getItem('lifetime_stats')) || {
+            byen: 0, initiativ: 0, lobe: 0, fitpige: 0, genpige: 0, some: 0, failed: 0
+        };
+
+        // Sikrer at 'failed' eksisterer i gamle gemte data
+        if(lifeTimeStats.failed === undefined) lifeTimeStats.failed = 0;
+
+        document.getElementById('score-counter').innerText = currentScore;
+        updateGoalText();
+        renderWeeklyLog();
+        renderYearlyProgression();
+        calculateAndDisplayLifetimeStats();
+        checkSaturdayNotification();
+        updateUndoButtonVisibility();
+        tjekFitnessSpørgsmålDage();
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             
-            document.getElementById('tab-' + tabName).classList.add('active');
-            document.getElementById('btn-tab-' + tabName).classList.add('active');
-            
-            if(tabName === 'historik') opdaterHistorik();
-        }
-
-        document.getElementById('social-date').valueAsDate = new Date();
-
-        // --- FITNESS PARSING ---
-        const traeningsDage = [0, 3, 4, 6]; // 0=Søn, 3=Ons, 4=Tor, 6=Lør
-        const idag = new Date();
-        const ugedag = idag.getDay();
-        const datoStreng = idatTilStreng(idag);
-
-        function idatTilStreng(d) {
-            return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
-        }
-
-        let fitnessLog = JSON.parse(localStorage.getItem('fitnessLog')) || [];
-        let alleredeSvaret = fitnessLog.some(log => log.dato === datoStreng);
-
-        if (traeningsDage.includes(ugedag) && !alleredeSvaret) {
-            document.getElementById('fitness-card').style.display = 'block';
-            document.getElementById('no-fitness-card').style.display = 'none';
-        } else {
-            document.getElementById('fitness-card').style.display = 'none';
-            document.getElementById('no-fitness-card').style.display = 'block';
-        }
-
-        function fitnessSvar(svar) {
-            if (svar === 'nej') {
-                gemFitnessResultat(false, false);
-                visFitnessStatus("Flot klaret med træningen alligevel!");
+            if(tab === 'events') {
+                document.getElementById('tab-events').classList.add('active');
+                document.getElementById('btn-events').classList.add('active');
+            } else if(tab === 'openers') {
+                document.getElementById('tab-openers').classList.add('active');
+                document.getElementById('btn-openers').classList.add('active');
             } else {
-                document.getElementById('q1').style.display = 'none';
-                document.getElementById('q2').style.display = 'block';
+                document.getElementById('tab-goals').classList.add('active');
+                document.getElementById('btn-goals').classList.add('active');
             }
         }
 
-        function fitnessSnakSvar(svar) {
-            if (svar === 'ja') {
-                gemFitnessResultat(true, true);
-                visFitnessStatus("Stærkt gået! Du er for vild! 🔥");
-            } else {
-                gemFitnessResultat(true, false);
-                visFitnessStatus("Registreret som et forsøg. Næste gang snakker du med hende!");
-            }
-        }
-
-        function gemFitnessResultat(spottet, snakket) {
-            let fitnessLog = JSON.parse(localStorage.getItem('fitnessLog')) || [];
-            fitnessLog.push({
-                dato: datoStreng,
-                spottet: spottet,
-                snakket: snakket
-            });
-            localStorage.setItem('fitnessLog', JSON.stringify(fitnessLog));
-        }
-
-        function visFitnessStatus(tekst) {
-            document.getElementById('q1').style.display = 'none';
-            document.getElementById('q2').style.display = 'none';
-            let status = document.getElementById('fitness-status');
-            status.innerText = tekst;
-            status.style.display = 'block';
-        }
-
-        // --- SOCIALE FUNKTIONER ---
-        function gemSocial() {
-            const dato = document.getElementById('social-date').value;
-            const desc = document.getElementById('social-desc').value;
-            const insta = document.getElementById('insta-post').checked;
-
-            if(!desc) { alert("Skriv venligst lidt om hvad du lavede."); return; }
-
-            let socialLog = JSON.parse(localStorage.getItem('socialLog')) || [];
-            socialLog.push({ dato: dato, beskrivelse: desc, instagram: insta });
-            localStorage.setItem('socialLog', JSON.stringify(socialLog));
-
-            document.getElementById('social-desc').value = '';
-            document.getElementById('insta-post').checked = false;
-            alert("Social begivenhed gemt permanent!");
-        }
-
-        function opdaterHistorik() {
-            let fitnessLog = JSON.parse(localStorage.getItem('fitnessLog')) || [];
-            let spottetCount = fitnessLog.filter(l => l.spottet).length;
-            let talkedCount = fitnessLog.filter(l => l.snakket).length;
-            let failedCount = fitnessLog.filter(l => l.spottet && !l.snakket).length;
-
-            document.getElementById('stat-spotted').innerText = spottetCount;
-            document.getElementById('stat-talked').innerText = talkedCount;
-            document.getElementById('stat-failed').innerText = failedCount;
-
-            let socialLog = JSON.parse(localStorage.getItem('socialLog')) || [];
-            let listeDiv = document.getElementById('social-historik-liste');
+        function registerAction(actionName) {
+            currentScore++;
+            const timestamp = new Date().toLocaleDateString('da-DK', {weekday: 'short', hour: '2-digit', minute:'2-digit'});
+            weeklyLog.push({ id: Date.now(), name: actionName, time: timestamp });
             
-            if(socialLog.length === 0) {
-                listeDiv.innerHTML = "Intet gemt endnu...";
-                return;
+            updateLifetimeCounter(actionName, 1);
+            saveData();
+            triggerDopaminFeedback();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        // NY: Spørger om musik/instrumenter ved SoMe kontakt
+        function registerActionWithInstaCheck() {
+            let actionName = 'Skrevet til pige på SoMe 📱';
+            if(confirm("Lagde du også et Instagram-opslag eller en story op med dine trommer/klaver i dag? 🥁🎹")) {
+                actionName = 'Skrevet til pige på SoMe + Musik-opslag 📱🥁🎹';
             }
-
-            socialLog.sort((a,b) => new Date(b.dato) - new Date(a.dato));
-            listeDiv.innerHTML = '';
-            socialLog.forEach(item => {
-                let div = document.createElement('div');
-                div.className = 'log-item';
-                let instaTekst = item.instagram ? "<br><strong>📸 Insta-opslag:</strong> Ja (Trommer/Klaver) 🥁🎹" : "";
-                div.innerHTML = `<strong>Dato:</strong> ${item.dato}<br><strong>Hvad skete der:</strong> ${item.beskrivelse}${instaTekst}`;
-                listeDiv.appendChild(div);
-            });
+            registerAction(actionName);
         }
 
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('SW Ok!'))
-            .catch(err => console.error('SW Fejl:', err));
+        function promptSocialArrangement() {
+            const navn = prompt("Hvilket socialt arrangement deltog du i?");
+            if(navn && navn.trim() !== "") {
+                registerAction("Socialt: " + navn.trim());
+            }
         }
-    </script>
-</body>
-</html>
+
+        function deleteAction(id) {
+            const itemToDelete = weeklyLog.find(item => item.id === id);
+            if(itemToDelete) {
+                updateLifetimeCounter(itemToDelete.name, -1);
+            }
+            
+            weeklyLog = weeklyLog.filter(item => item.id !== id);
+            currentScore = weeklyLog.length;
+            saveData();
+            document.getElementById('dopamin-alert').style.display = 'none';
+        }
+
+        function updateLifetimeCounter(name, amount) {
+            if(name.includes('Fest')) lifeTimeStats.byen += amount;
+            if(name.includes('Initiativ') || name.includes('Socialt:')) lifeTimeStats.initiativ += amount;
+            if(name.includes('Løbeklub')) lifeTimeStats.lobe += amount;
+            if(name.includes('fitness')) lifeTimeStats.fitpige += amount;
+            if(name.includes('hverdagen')) lifeTimeStats.genpige += amount;
+            if(name.includes('SoMe')) lifeTimeStats.some += amount;
+            
+            for (let key in lifeTimeStats) {
+                if(lifeTimeStats[key] < 0) lifeTimeStats[key] = 0;
+            }
+            localStorage.setItem('lifetime_stats', JSON.stringify(lifeTimeStats));
+            calculateAndDisp
