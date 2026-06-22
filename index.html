@@ -9,10 +9,9 @@
     <link rel="apple-touch-icon" href="logo.png">
     <meta name="theme-color" content="#1e293b">
 
-    <link rel="manifest" href="data:application/json;base64,ewogICJzaG9ydF9uYW1lIjogIlNvY2lhbEFwcCIsCiAgIm5hbWUiOiAiT2ZmbGluZSBTb2NpYWwgJiBEYXRpbmcgQXBwIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAibG9nby5wbmciLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJwdXJwb3NlIjogImFueWMgbWFya2FibGUiCiAgICB9CiAgXSwKICAic3RhcnRfdXJsIjogIi4vaW5kZXguaHRtbCIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzFlMjkzYiIsCiAgInRoZW1lX2NvbG9yIjogIiMxZTI5M2IiLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIKfQ==">
+    <link rel="manifest" href="data:application/json;base64,ewogICJzaG9ydF9uYW1lIjogIlNvY2lhbEFwcCIsCiAgIm5hbWUiOiAiT2ZmbGluZSBTb2NpYWwgJiBEYXRpbmcgQXBwIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAibG9nby5wbmciLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAic2l6ZXMiOiAiTTEyeDUxMiIsCiAgICAgICJwdXJwb3NlIjogImFueWMgbWFya2FibGUiCiAgICB9CiAgXSwKICAic3RhcnRfdXJsIjogIi4vaW5kZXguaHRtbCIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzFlMjkzYiIsCiAgInRoZW1lX2NvbG9yIjogIiMxZTI5M2IiLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIKfQ==">
 
     <style>
-        /* Smart, elegant og professionel skrifttype-stack (Inter / System-UI) */
         body { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
             background-color: #f8f9fa; 
@@ -51,7 +50,6 @@
         .dopamin-msg { background: #e8f5e9; color: #2e7d32; padding: 12px; border-radius: 10px; font-weight: 600; margin-top: 12px; display: none; font-size: 14px; line-height: 1.4; }
         .notification-alert { background: #ffebee; color: #c62828; border: 2px solid #c62828; padding: 15px; border-radius: 10px; font-weight: 700; margin-bottom: 15px; display: none; text-align: center; font-size: 14px; line-height: 1.4; }
         
-        /* Her sikres den smarte, elegante skrifttype på knapperne */
         .action-btn { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: white; 
@@ -130,4 +128,124 @@
                     <button class="btn btn-secondary" style="background: #dc2626;" onclick="svarFitnessSnakkede(false)">Nej</button>
                 </div>
             </div>
-            <p id="fitness-popup-status" style="display:none; font-weight:bold; color: #16a34a; margin: 5px 0 0 0; font-size
+            <p id="fitness-popup-status" style="display:none; font-weight:bold; color: #16a34a; margin: 5px 0 0 0; font-size: 14px;"></p>
+        </div>
+
+        <div class="status-box">
+            <div style="font-size: 13px; font-weight: 700; color: #64748b; letter-spacing: 0.5px;">DINE INITIATIVER DENNE UGE:</div>
+            <div class="score" id="score-counter">0</div>
+            <div style="font-size: 13px; color: #475569; font-weight: 500;" id="goal-status">Mål: Mindst 1 om ugen</div>
+            <div class="dopamin-msg" id="dopamin-alert"></div>
+        </div>
+
+        <div class="stats-box">
+            <div style="font-weight: 700; text-align: center; font-size: 13px; letter-spacing: 0.8px; color: #94a3b8;">🏆 SAMLEDE SUCCES I ÅR</div>
+            <div class="stats-grid">
+                <div class="stat-item">🕺 Byen / Fest<br><span class="stat-val" id="stat-byen">0</span></div>
+                <div class="stat-item">🎉 Initiativer<br><span class="stat-val" id="stat-initiativ">0</span></div>
+                <div class="stat-item">🏃‍♂️ Løbeklub<br><span class="stat-val" id="stat-lobe">0</span></div>
+                <div class="stat-item">💪 Fitness piger<br><span class="stat-val" id="stat-fitpige">0</span></div>
+                <div class="stat-item">🗣️ Hverdags piger<br><span class="stat-val" id="stat-genpige">0</span></div>
+                <div class="stat-item">📱 Skrevet SoMe<br><span class="stat-val" id="stat-some">0</span></div>
+                <div class="stat-item" style="grid-column: span 2; background: rgba(220, 38, 38, 0.1);">❌ Fejlede forsøg (Ikke snakket)<br><span class="stat-val" id="stat-failed" style="color: #ef4444;">0</span></div>
+            </div>
+        </div>
+
+        <h3 style="color: #1e293b; margin-top: 15px; margin-bottom: 8px; font-size: 16px; font-weight: 700; letter-spacing: -0.2px;">Registrer handling:</h3>
+        
+        <button class="action-btn" onclick="registerAction('Fest / I byen 🕺')">Fest / I byen <span>🕺</span></button>
+        <button class="action-btn" onclick="registerAction('Initiativ til noget socialt 🎉')">Initiativ til noget socialt (koncert, fest) <span>🎉</span></button>
+        <button class="action-btn" onclick="promptSocialArrangement()">Socialt arrangement <span>📝</span></button>
+        <button class="action-btn" onclick="registerAction('Deltagelse i Løbeklub 🏃‍♂️')">Deltagelse i Løbeklub <span>🏃‍♂️</span></button>
+        <button class="action-btn" onclick="registerAction('Samtale med en pige i fitness 💪')">Samtale med en pige i fitnesscentret <span>💪</span></button>
+        <button class="action-btn" onclick="registerAction('Naturlig samtale med en pige i hverdagen 🗣️')">Naturlig samtale med en pige i hverdagen (Supermarked, tog, osv.) <span>🗣️</span></button>
+        <button class="action-btn" onclick="registerActionWithInstaCheck()">Skrive til en pige på Insta/FB <span>📱</span></button>
+        <button class="action-btn" style="border: 1px solid #cbd5e1; background: #f8fafc;" onclick="registerAction('Instagram opslag med trommer eller klaver 🥁🎹')">Instagram opslag med trommer eller klaver <span>🥁🎹</span></button>
+        
+        <div class="history-section">
+            <div class="history-title">Ugens specifikke handlinger:</div>
+            <div id="weekly-log-list">
+                <p style="color:#94a3b8; font-size:13px; text-align:center; font-weight: 500;">Ingen handlinger registreret endnu.</p>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="history-title" style="color: #1e293b; border-bottom: 1px solid #cbd5e1;">Arkiv: Gemte sociale begivenheder 📜</div>
+            <div id="permanent-social-list">
+                <p style="color:#94a3b8; font-size:13px; text-align:center; font-weight: 500;">Ingen sociale begivenheder gemt endnu.</p>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="history-title">Års-progression (Momentum-kalender):</div>
+            <div class="progression-box" id="year-progression"></div>
+        </div>
+    </div>
+
+    <div id="tab-events" class="tab-content">
+        <div class="event-card">
+            <div class="tag">El Mundo</div>
+            <div class="title">Jazz Jam, Pop Jam mm.</div>
+            <div class="time">📍 Ugentlige events</div>
+            <div class="desc">Tjek de nyeste musik-events, jams og festaftener direkte på El Mundos officielle oversigt.</div>
+            <a href="https://www.elmundo.dk" target="_blank" class="btn">Åbn link direkte</a>
+        </div>
+
+        <div class="event-card">
+            <div class="tag">Facebook</div>
+            <div class="title">Relevante Begivenheder</div>
+            <div class="time">📍 Personligt feed</div>
+            <div class="desc">Dine personligt tilpassede begivenheder i nærheden baseret på dine interesser og netværk.</div>
+            <a href="https://www.facebook.com/events" target="_blank" class="btn">Åbn link direkte</a>
+        </div>
+
+        <div class="event-card">
+            <div class="tag">SingleNordic</div>
+            <div class="title">Dating & Speeddating</div>
+            <div class="time">📍 Kommende arrangementer</div>
+            <div class="desc">Find de nyeste speeddating-events og singlefester i området via Billetto.</div>
+            <a href="https://billetto.dk" target="_blank" class="btn">Åbn link direkte</a>
+        </div>
+    </div>
+
+    <div id="tab-openers" class="tab-content">
+        <div class="event-card">
+            <h3 style="margin-top:0; color:#1e293b;">I Fitnesscentret 🏋️‍♂️</h3>
+            <div class="icebreaker" style="border-left: 4px solid #e94d58; background: #fff5f5;">
+                <strong>Åbnings interaktion (Bænkpres):</strong><br>
+                "Hej, kan du hjælpe med at spotte på mit sidste sæt? (Bænkpres)"<br>
+                <em>→ Herfra samtale (hvis interesse).</em>
+            </div>
+            <div class="icebreaker">
+                <strong>Maskine-delingen:</strong><br>
+                "Hej, må jeg køre imellem på denne her maskine?"<br>
+                <em>→ Giver mulighed for naturlig snak i pauserne.</em>
+            </div>
+            <div class="icebreaker">
+                <strong>Komplementet:</strong><br>
+                "Mega sejt kæmpet på det sæt der! Hvor længe har du trænet her?"
+            </div>
+        </div>
+
+        <div class="event-card">
+            <h3 style="margin-top:0; color:#1e293b;">Generelle åbninger ☕</h3>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-item active" id="btn-goals" onclick="switchTab('goals')">🎯 Mine Mål</div>
+        <div class="nav-item" id="btn-events" onclick="switchTab('events')">📅 Begivenheder</div>
+        <div class="nav-item" id="btn-openers" onclick="switchTab('openers')">💬 Åbninger</div>
+    </div>
+
+    <script>
+        // Automatisk Service Worker registrering
+        if ('serviceWorker' in navigator) {
+            const swCode = "self.addEventListener('fetch', function(e) { e.respondWith(fetch(e.request)); });";
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl).catch(err => console.log('SW error', err));
+        }
+
+        let currentScore = parseInt(localStorage.getItem('offline_score')) || 0;
+        let weeklyLog = JSON.
