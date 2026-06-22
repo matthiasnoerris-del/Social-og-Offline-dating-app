@@ -9,11 +9,9 @@
     <link rel="apple-touch-icon" href="logo.png">
     <meta name="theme-color" content="#1e293b">
 
-    <!-- Indbygget manifest-fil for ægte app-installation (PWA) -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJzaG9ydF9uYW1lIjogIlNvY2lhbEFwcCIsCiAgIm5hbWUiOiAiT2ZmbGluZSBTb2NpYWwgJiBEYXRpbmcgQXBwIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAibG9nby5wbmciLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJwdXJwb3NlIjogImFueSBtYXJrYWJsZSIKICAgIH0KICBdLAogICJzdGFydF91cmwiOiAiLi9pbmRleC5odG1sIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMWUyOTNiIiwKICAidGhlbWVfY29sb3IiOiAiIzFlMjkzYiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0Igp9">
+    <link rel="manifest" href="data:application/json;base64,ewogICJzaG9ydF9uYW1lIjogIlNvY2lhbEFwcCIsCiAgIm5hbWUiOiAiT2ZmbOfflineBTb2NpYWwgJiBEYXRpbmcgQXBwIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAibG9nby5wbmciLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJwdXJwb3NlIjogImFueSBtYXJrYWJsZSIKICAgIH0KICBdLAogICJzdGFydF91cmwiOiAiLi9pbmRleC5odG1sIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMWUyOTNiIiwKICAidGhlbWVfY29sb3IiOiAiIzFlMjkzYiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0Igp9">
 
     <style>
-        /* Smart, elegant og professionel skrifttype-stack (Inter / System-UI) */
         body { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
             background-color: #f8f9fa; 
@@ -29,7 +27,7 @@
         h1 { color: #e94d58; margin-bottom: 6px; font-size: 28px; font-weight: 800; text-align: center; letter-spacing: -0.5px; }
         p.subtitle { color: #6c757d; margin-bottom: 25px; text-align: center; margin-top: 0; font-size: 15px; font-weight: 500; }
         
-        /* Faner */
+        /* Faner og synlighed */
         .tab-content { width: 100%; max-width: 500px; display: none; }
         .tab-content.active { display: flex; flex-direction: column; gap: 15px; }
         
@@ -46,13 +44,13 @@
         .btn-dark { background-color: #1e293b; }
         .btn-secondary { background-color: #64748b; }
         
-        /* Mål / Dopamin interface */
-        .status-box { background: #fff; padding: 24px; border-radius: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border: 2px dashed #e94d58; }
+        /* Status / Scorebænk */
+        .status-box { background: #fff; padding: 24px; border-radius: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border: 2px dashed #e94d58; width: 100%; box-sizing: border-box; }
         .score { font-size: 36px; font-weight: 800; color: #e94d58; margin: 12px 0; letter-spacing: -1px; }
         .dopamin-msg { background: #e8f5e9; color: #2e7d32; padding: 12px; border-radius: 10px; font-weight: 600; margin-top: 12px; display: none; font-size: 14px; line-height: 1.4; }
-        .notification-alert { background: #ffebee; color: #c62828; border: 2px solid #c62828; padding: 15px; border-radius: 10px; font-weight: 700; margin-bottom: 15px; display: none; text-align: center; font-size: 14px; line-height: 1.4; }
+        .notification-alert { background: #ffebee; color: #c62828; border: 2px solid #c62828; padding: 15px; border-radius: 10px; font-weight: 700; margin-bottom: 15px; display: none; text-align: center; font-size: 14px; line-height: 1.4; width: 100%; box-width: border-box; }
         
-        /* Her sikres den smarte, elegante skrifttype på knapperne */
+        /* Handlingsknapper */
         .action-btn { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: white; 
@@ -76,31 +74,31 @@
         }
         .action-btn:active { background: #f8fafc; border-color: #cbd5e1; transform: scale(0.99); }
         
-        /* Statistik boks */
-        .stats-box { background: #1e293b; color: white; padding: 18px; border-radius: 16px; margin-top: 5px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        /* Statistik */
+        .stats-box { background: #1e293b; color: white; padding: 18px; border-radius: 16px; margin-top: 5px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; box-sizing: border-box; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; font-size: 13px; }
         .stat-item { background: rgba(255,255,255,0.06); padding: 10px; border-radius: 8px; text-align: center; font-weight: 500; color: #cbd5e1; }
         .stat-val { font-size: 20px; font-weight: 700; color: #f59e0b; margin-top: 2px; display: block; }
 
-        /* Historik og Log-liste */
-        .history-section { background: white; padding: 18px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-top: 15px; border: 1px solid #eaeaea; }
+        /* Historik og lister */
+        .history-section { background: white; padding: 18px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-top: 15px; border: 1px solid #eaeaea; width: 100%; box-sizing: border-box; }
         .history-title { font-weight: 700; font-size: 15px; margin-bottom: 12px; color: #1a1a1a; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; letter-spacing: -0.2px; }
         .log-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f8fafc; font-size: 14px; font-weight: 500; color: #334155; }
         .delete-btn { color: #e94d58; background: none; border: none; cursor: pointer; font-weight: 700; font-size: 13px; padding: 4px 8px; }
         
-        /* Års-progression */
+        /* Kalender */
         .progression-box { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 12px; }
         .week-chip { background: #f1f5f9; padding: 10px 4px; text-align: center; border-radius: 8px; font-size: 11px; font-weight: 700; color: #94a3b8; border: 1px solid #e2e8f0; }
         .week-chip.success { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
         .week-chip.epic { background: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; box-shadow: 0 2px 4px rgba(194,65,12,0.05); position: relative; }
         .week-chip.epic::after { content: '🔥'; position: absolute; top: -7px; right: -4px; font-size: 9px; }
 
-        /* Bund-navigation */
+        /* Bundnavigation */
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; box-shadow: 0 -4px 12px rgba(0,0,0,0.04); z-index: 100; border-top: 1px solid #eaeaea; }
-        .nav-item { flex: 1; text-align: center; padding: 18px 0; font-weight: 700; color: #64748b; cursor: pointer; font-size: 14px; transition: all 0.2s; letter-spacing: -0.2px; }
+        .nav-item { flex: 1; text-align: center; padding: 18px 0; font-weight: 700; color: #64748b; cursor: pointer; font-size: 14px; transition: all 0.2s; letter-spacing: -0.2px; -webkit-tap-highlight-color: transparent; }
         .nav-item.active { color: #e94d58; border-top: 3px solid #e94d58; background: #fffafb; padding-top: 15px; }
 
-        /* Icebreaker Styling */
+        /* Icebreaker */
         .icebreaker { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-size: 14px; color: #1e293b; }
     </style>
 </head>
@@ -113,10 +111,8 @@
         ⚠️ LØRDAGSNOTIFIKATION:<br>Du har ikke opfyldt dit ugentlige mål endnu! Kom ud af busken og tag et initiativ i dag! 🚀
     </div>
 
-    <!-- TAB 1: MINE MÅL -->
     <div id="tab-goals" class="tab-content active">
         
-        <!-- NYT: Dynamisk Fitness Popup Spørgsmål -->
         <div id="fitness-popup-card" class="event-card" style="background: #fffbeb; border: 2px solid #f59e0b; display: none;">
             <div class="tag" style="background: #fef3c7; color: #b45309;">Trænings-tjek! 🏋️‍♂️</div>
             <div id="fit-q1">
@@ -152,7 +148,6 @@
                 <div class="stat-item">💪 Fitness piger<br><span class="stat-val" id="stat-fitpige">0</span></div>
                 <div class="stat-item">🗣️ Hverdags piger<br><span class="stat-val" id="stat-genpige">0</span></div>
                 <div class="stat-item">📱 Skrevet SoMe<br><span class="stat-val" id="stat-some">0</span></div>
-                <!-- NY: Tæller til ikke grebne chancer -->
                 <div class="stat-item" style="grid-column: span 2; background: rgba(220, 38, 38, 0.1);">❌ Fejlede forsøg (Ikke snakket)<br><span class="stat-val" id="stat-failed" style="color: #ef4444;">0</span></div>
             </div>
         </div>
@@ -164,7 +159,7 @@
         <button class="action-btn" onclick="promptSocialArrangement()">Socialt arrangement <span>📝</span></button>
         <button class="action-btn" onclick="registerAction('Deltagelse i Løbeklub 🏃‍♂️')">Deltagelse i Løbeklub <span>🏃‍♂️</span></button>
         <button class="action-btn" onclick="registerAction('Samtale med en pige i fitness 💪')">Samtale med en pige i fitnesscentret <span>💪</span></button>
-        <button class="action-btn" onclick="registerAction('Naturlig samtale med en pige i hverdagen 🗣️')">Naturlig samtale med en pige i hverdagen (Supermarked, tog, osv.) <span>🗣️</span></button>
+        <button class="action-btn" onclick="registerAction('Naturlig samtale med en pige i hverdagen 🗣️')">Naturlig samtale med en pige i hverdagen <span>🗣️</span></button>
         <button class="action-btn" onclick="registerActionWithInstaCheck()">Skrive til en pige på Insta/FB <span>📱</span></button>
         <button class="action-btn" style="border: 1px solid #cbd5e1; background: #f8fafc;" onclick="registerAction('Instagram opslag med trommer eller klaver 🥁🎹')">Instagram opslag med trommer eller klaver <span>🥁🎹</span></button>
         
@@ -175,7 +170,6 @@
             </div>
         </div>
 
-        <!-- NYT SEKTION: Gemte sociale begivenheder (Slettes ALDRIG) -->
         <div class="history-section">
             <div class="history-title" style="color: #1e293b; border-bottom: 1px solid #cbd5e1;">Arkiv: Gemte sociale begivenheder 📜</div>
             <div id="permanent-social-list">
@@ -186,14 +180,11 @@
         <div class="history-section">
             <div class="history-title">Års-progression (Momentum-kalender):</div>
             <div class="progression-box" id="year-progression"></div>
-            
             <button id="undo-week-btn" class="btn" style="background: #f97316; margin-top: 15px; font-size: 13px; padding: 10px; display: none;" onclick="undoArchiveWeek()">Fortryd sidste uge-afslutning ↩️</button>
         </div>
     </div>
 
-    <!-- TAB 2: BEGIVENHEDER -->
     <div id="tab-events" class="tab-content">
-        <!-- Kort 1: El Mundo -->
         <div class="event-card">
             <div class="tag">El Mundo</div>
             <div class="title">Jazz Jam, Pop Jam mm.</div>
@@ -202,7 +193,6 @@
             <a href="https://www.elmundo.dk" target="_blank" class="btn">Åbn link direkte</a>
         </div>
 
-        <!-- Kort 2: Facebook -->
         <div class="event-card">
             <div class="tag">Facebook</div>
             <div class="title">Relevante Begivenheder</div>
@@ -211,7 +201,6 @@
             <a href="https://www.facebook.com/events" target="_blank" class="btn">Åbn link direkte</a>
         </div>
 
-        <!-- Kort 3: SingleNordic / Billetto -->
         <div class="event-card">
             <div class="tag">SingleNordic</div>
             <div class="title">Dating & Speeddating</div>
@@ -221,19 +210,16 @@
         </div>
     </div>
 
-    <!-- TAB 3: ÅBNINGSREPLIKKER & INTERAKTIONER -->
     <div id="tab-openers" class="tab-content">
         <div class="event-card">
             <h3 style="margin-top:0; color:#1e293b;">I Fitnesscentret 🏋️‍♂️</h3>
             <div class="icebreaker" style="border-left: 4px solid #e94d58; background: #fff5f5;">
                 <strong>Åbnings interaktion (Bænkpres):</strong><br>
-                "Hej, kan du hjælpe med at spotte på mit sidste sæt? (Bænkpres)"<br>
-                <em>→ Herfra samtale (hvis interesse).</em>
+                "Hej, kan du hjælpe med at spotte på mit sidste sæt? (Bænkpres)"
             </div>
             <div class="icebreaker">
                 <strong>Maskine-delingen:</strong><br>
-                "Hej, må jeg køre imellem på denne her maskine?"<br>
-                <em>→ Giver mulighed for naturlig snak i pauserne.</em>
+                "Hej, må jeg køre imellem på denne her maskine?"
             </div>
             <div class="icebreaker">
                 <strong>Komplementet:</strong><br>
@@ -242,7 +228,6 @@
         </div>
     </div>
 
-    <!-- Bund-navigation med 3 faner -->
     <div class="nav-bar">
         <div class="nav-item active" id="btn-goals" onclick="switchTab('goals')">🎯 Mine Mål</div>
         <div class="nav-item" id="btn-events" onclick="switchTab('events')">📅 Begivenheder</div>
@@ -250,7 +235,7 @@
     </div>
 
     <script>
-        // Automatisk Service Worker registrering i koden for at tvinge Chromes "Installer App"-knap frem
+        // Service Worker
         if ('serviceWorker' in navigator) {
             const swCode = "self.addEventListener('fetch', function(e) { e.respondWith(fetch(e.request)); });";
             const blob = new Blob([swCode], { type: 'application/javascript' });
@@ -258,58 +243,68 @@
             navigator.serviceWorker.register(swUrl).catch(err => console.log('SW error', err));
         }
 
+        // Hent oprindelige eller tomme data
         let currentScore = parseInt(localStorage.getItem('offline_score')) || 0;
         let weeklyLog = JSON.parse(localStorage.getItem('weekly_log')) || [];
         let yearlyArchive = JSON.parse(localStorage.getItem('yearly_archive')) || {};
         let lastArchivedWeek = localStorage.getItem('last_archived_week') || null;
-        
         let permanentSocialLog = JSON.parse(localStorage.getItem('permanent_social_log')) || [];
-
         let lifeTimeStats = JSON.parse(localStorage.getItem('lifetime_stats')) || {
             byen: 0, initiativ: 0, lobe: 0, fitpige: 0, genpige: 0, some: 0, failed: 0
         };
-
         if(lifeTimeStats.failed === undefined) lifeTimeStats.failed = 0;
 
-        // Tjek automatisk ugeskifte før appen indlæser indhold
-        tjekOgHåndterAutomatiskUgeskifte();
+        // Funktion til fane-skift (Sikret mod fejl)
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            if(tab === 'events') {
+                document.getElementById('tab-events').style.display = 'flex';
+                document.getElementById('btn-events').classList.add('active');
+            } else if(tab === 'openers') {
+                document.getElementById('tab-openers').style.display = 'flex';
+                document.getElementById('btn-openers').classList.add('active');
+            } else {
+                document.getElementById('tab-goals').style.display = 'flex';
+                document.getElementById('btn-goals').classList.add('active');
+            }
+        }
 
-        document.getElementById('score-counter').innerText = currentScore;
-        updateGoalText();
-        renderWeeklyLog();
-        renderPermanentSocialLog();
-        renderYearlyProgression();
-        calculateAndDisplayLifetimeStats();
-        checkSaturdayNotification();
-        updateUndoButtonVisibility();
-        tjekFitnessSpørgsmålDage();
+        // KØR FØRST NÅR HELE SIDEN ER KLAR FOR AT UNDGÅ BLOCKING CRASH
+        window.addEventListener('DOMContentLoaded', () => {
+            tjekOgHåndterAutomatiskUgeskifte();
+            
+            document.getElementById('score-counter').innerText = currentScore;
+            updateGoalText();
+            renderWeeklyLog();
+            renderPermanentSocialLog();
+            renderYearlyProgression();
+            calculateAndDisplayLifetimeStats();
+            checkSaturdayNotification();
+            updateUndoButtonVisibility();
+            tjekFitnessSpørgsmålDage();
+        });
 
-        // Funktion der tjekker om vi er trådt ind i en ny uge, og automatisk arkiverer samt overfører log-elementer
         function tjekOgHåndterAutomatiskUgeskifte() {
             const gemtUgeNummer = localStorage.getItem('sidst_aktive_ugenummer');
             const nuværendeUgeNummer = getWeekNumber(new Date()).toString();
 
             if (gemtUgeNummer && gemtUgeNummer !== nuværendeUgeNummer) {
-                // Flyt ALLE specifikke ugelogs (f.eks. vindsurf eller andre begivenheder) over i permanentSocialLog hvis de ikke allerede findes der
-                weeklyLog.forEach(item => {
-                    const findesAllerede = permanentSocialLog.some(p => p.id === item.id);
-                    if (!findesAllerede) {
-                        permanentSocialLog.push(item);
-                    }
-                });
+                if (Array.isArray(weeklyLog)) {
+                    weeklyLog.forEach(item => {
+                        const findesAllerede = permanentSocialLog.some(p => p.id === item.id);
+                        if (!findesAllerede) {
+                            permanentSocialLog.push(item);
+                        }
+                    });
+                }
                 localStorage.setItem('permanent_social_log', JSON.stringify(permanentSocialLog));
 
-                // Kør den normale uge-arkivering til årskalenderen
                 yearlyArchive[gemtUgeNummer] = currentScore;
                 localStorage.setItem('yearly_archive', JSON.stringify(yearlyArchive));
                 
                 localStorage.setItem('last_archived_week', gemtUgeNummer);
                 localStorage.setItem('last_archived_score', currentScore);
-                localStorage.setItem('last_archived_log', JSON.stringify(weeklyLog));
-                
-                // Nulstil den aktive uges tæller og log
-                currentScore = 0;
-                weeklyLog = [];
-                
-                localStorage.setItem('offline_score', currentScore);
-                localStorage.setItem(
+                localStorage.setItem('last_archived_log
+            
