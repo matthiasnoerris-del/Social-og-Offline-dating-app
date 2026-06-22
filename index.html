@@ -240,10 +240,6 @@
                 "Mega sejt kæmpet på det sæt der! Hvor længe har du trænet her?"
             </div>
         </div>
-
-        <div class="event-card">
-            <h3 style="margin-top:0; color:#1e293b;">Generelle åbninger ☕</h3>
-        </div>
     </div>
 
     <!-- Bund-navigation med 3 faner -->
@@ -313,4 +309,7 @@
                 
                 // Nulstil den aktive uges tæller og log
                 currentScore = 0;
-                weeklyLog =
+                weeklyLog = [];
+                
+                localStorage.setItem('offline_score', currentScore);
+                localStorage.setItem(
