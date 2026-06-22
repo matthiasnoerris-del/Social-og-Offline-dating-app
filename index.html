@@ -27,9 +27,8 @@
         h1 { color: #e94d58; margin-bottom: 6px; font-size: 28px; font-weight: 800; text-align: center; letter-spacing: -0.5px; }
         p.subtitle { color: #6c757d; margin-bottom: 25px; text-align: center; margin-top: 0; font-size: 15px; font-weight: 500; }
         
-        /* FANER: Skudsikker skjul/vis logik */
-        .tab-content { width: 100%; max-width: 500px; display: none !important; }
-        .tab-content.active { display: flex !important; flex-direction: column; gap: 15px; }
+        /* Standard opsætning for faner - JavaScript styrer synligheden direkte */
+        .tab-content { width: 100%; max-width: 500px; display: none; flex-direction: column; gap: 15px; }
         
         /* Event Kort */
         .event-card { background: white; padding: 20px; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #eaeaea; margin-bottom: 15px; width: 100%; box-sizing: border-box; }
@@ -111,7 +110,7 @@
         ⚠️ LØRDAGSNOTIFIKATION:<br>Du har ikke opfyldt dit ugentlige mål endnu! Kom ud af busken og tag et initiativ i dag! 🚀
     </div>
 
-    <div id="tab-goals" class="tab-content active">
+    <div id="tab-goals" class="tab-content" style="display: flex;">
         
         <div id="fitness-popup-card" class="event-card" style="background: #fffbeb; border: 2px solid #f59e0b; display: none;">
             <div class="tag" style="background: #fef3c7; color: #b45309;">Trænings-tjek! 🏋️‍♂️</div>
@@ -161,5 +160,56 @@
         <button class="action-btn" onclick="registerAction('Samtale med en pige i fitness 💪')">Samtale med en pige i fitnesscentret <span>💪</span></button>
         <button class="action-btn" onclick="registerAction('Naturlig samtale med en pige i hverdagen 🗣️')">Naturlig samtale med en pige i hverdagen <span>🗣️</span></button>
         <button class="action-btn" onclick="registerActionWithInstaCheck()">Skrive til en pige på Insta/FB <span>📱</span></button>
-        <button class="action-btn" style="border: 1px solid #cbd5e1; background: #f8fafc;" onclick="registerAction('Instagram
-            
+        <button class="action-btn" style="border: 1px solid #cbd5e1; background: #f8fafc;" onclick="registerAction('Instagram opslag med trommer eller klaver 🥁🎹')">Instagram opslag med trommer eller klaver <span>🥁🎹</span></button>
+        
+        <div class="history-section">
+            <div class="history-title">Ugens specifikke handlinger:</div>
+            <div id="weekly-log-list">
+                <p style="color:#94a3b8; font-size:13px; text-align:center; font-weight: 500;">Ingen handlinger registreret endnu.</p>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="history-title" style="color: #1e293b; border-bottom: 1px solid #cbd5e1;">Arkiv: Gemte sociale begivenheder 📜</div>
+            <div id="permanent-social-list">
+                <p style="color:#94a3b8; font-size:13px; text-align:center; font-weight: 500;">Ingen sociale begivenheder gemt endnu.</p>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="history-title">Års-progression (Momentum-kalender):</div>
+            <div class="progression-box" id="year-progression"></div>
+            <button id="undo-week-btn" class="btn" style="background: #f97316; margin-top: 15px; font-size: 13px; padding: 10px; display: none;" onclick="undoArchiveWeek()">Fortryd sidste uge-afslutning ↩️</button>
+        </div>
+    </div>
+
+    <div id="tab-events" class="tab-content">
+        <div class="event-card">
+            <div class="tag">El Mundo</div>
+            <div class="title">Jazz Jam, Pop Jam mm.</div>
+            <div class="time">📍 Ugentlige events</div>
+            <div class="desc">Tjek de nyeste musik-events, jams og festaftener direkte på El Mundos officielle oversigt.</div>
+            <a href="https://www.elmundo.dk" target="_blank" class="btn">Åbn link direkte</a>
+        </div>
+
+        <div class="event-card">
+            <div class="tag">Facebook</div>
+            <div class="title">Relevante Begivenheder</div>
+            <div class="time">📍 Personligt feed</div>
+            <div class="desc">Dine personligt tilpassede begivenheder i nærheden baseret på dine interesser og netværk.</div>
+            <a href="https://www.facebook.com/events" target="_blank" class="btn">Åbn link direkte</a>
+        </div>
+
+        <div class="event-card">
+            <div class="tag">SingleNordic</div>
+            <div class="title">Dating & Speeddating</div>
+            <div class="time">📍 Kommende arrangementer</div>
+            <div class="desc">Find de nyeste speeddating-events og singlefester i området via Billetto.</div>
+            <a href="https://billetto.dk" target="_blank" class="btn">Åbn link direkte</a>
+        </div>
+    </div>
+
+    <div id="tab-openers" class="tab-content">
+        <div class="event-card">
+            <h3 style="margin-top:0; color:#1e293b;">I Fitnesscentret 🏋️‍♂️</h3>
+            <div class="
