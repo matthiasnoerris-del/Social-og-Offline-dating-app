@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon" href="logo.png">
     <meta name="theme-color" content="#1e293b">
 
-    <link rel="manifest" href="data:application/json;base64,ewogICJzaG9ydF9uYW1lIjogIlNvY2lhbEFwcCIsCiAgIm5hbWUiOiAiT2Zmb江湖 Social & Dating AppIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAibG9nby5wbmciLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJwdXJwb3NlIjogImFueWMgbWFya2FibGUiCiAgICB9CiAgXSwKICAic3RhcnRfdXJsIjogIi4vaW5kZXguaHRtbCIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzFlMjkzYiIsCiAgInRoZW1lX2NvbG9yIjogIiMxZTI5M2IiLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIKfQ==">
+    <link rel="manifest" href="manifest.json">
 
     <style>
         body { 
@@ -239,11 +239,13 @@
     </div>
 
     <script>
+        // RETTELSE: Vi registrerer din rigtige pwabuilder-sw.js fil i stedet for den midlertidige blob.
         if ('serviceWorker' in navigator) {
-            const swCode = "self.addEventListener('fetch', function(e) { e.respondWith(fetch(e.request)); });";
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            const swUrl = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swUrl).catch(err => console.log('SW error', err));
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('pwabuilder-sw.js')
+                .then(reg => console.log('Service Worker registreret med succes!', reg))
+                .catch(err => console.log('SW fejl under registrering:', err));
+            });
         }
 
         let currentScore = parseInt(localStorage.getItem('offline_score')) || 0;
@@ -469,8 +471,8 @@
             permanentSocialLog.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'log-item';
-                const rentNavn = item.name.replace('Socialt: ', '');
-                div.innerHTML = `<div><span style="color:#16a34a; font-weight:700;">✔</span> <strong>${rentNavn}</strong> <span style="color:#94a3b8; font-size:11px; margin-left:5px;">(${item.time})</span></div>
+                div.annotation = item.name.replace('Socialt: ', '');
+                div.innerHTML = `<div><span style="color:#16a34a; font-weight:700;">✔</span> <strong>${div.annotation}</strong> <span style="color:#94a3b8; font-size:11px; margin-left:5px;">(${item.time})</span></div>
                                  <button class="delete-btn" style="color: #94a3b8;" onclick="deletePermanentSocial(${item.id})">Slet</button>`;
                 listEl.appendChild(div);
             });
