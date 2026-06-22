@@ -45,10 +45,10 @@
         .btn-secondary { background-color: #64748b; }
         
         /* Mål / Dopamin interface */
-        .status-box { background: #fff; padding: 24px; border-radius: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border: 2px dashed #e94d58; }
+        .status-box { background: #fff; padding: 24px; border-radius: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border: 2px dashed #e94d58; width: 100%; max-width: 500px; box-sizing: border-box; }
         .score { font-size: 36px; font-weight: 800; color: #e94d58; margin: 12px 0; letter-spacing: -1px; }
         .dopamin-msg { background: #e8f5e9; color: #2e7d32; padding: 12px; border-radius: 10px; font-weight: 600; margin-top: 12px; display: none; font-size: 14px; line-height: 1.4; }
-        .notification-alert { background: #ffebee; color: #c62828; border: 2px solid #c62828; padding: 15px; border-radius: 10px; font-weight: 700; margin-bottom: 15px; display: none; text-align: center; font-size: 14px; line-height: 1.4; }
+        .notification-alert { background: #ffebee; color: #c62828; border: 2px solid #c62828; padding: 15px; border-radius: 10px; font-weight: 700; margin-bottom: 15px; display: none; text-align: center; font-size: 14px; line-height: 1.4; width: 100%; max-width: 500px; box-sizing: border-box; }
         
         .action-btn { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -74,13 +74,13 @@
         .action-btn:active { background: #f8fafc; border-color: #cbd5e1; transform: scale(0.99); }
         
         /* Statistik boks */
-        .stats-box { background: #1e293b; color: white; padding: 18px; border-radius: 16px; margin-top: 5px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .stats-box { background: #1e293b; color: white; padding: 18px; border-radius: 16px; margin-top: 5px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; max-width: 500px; box-sizing: border-box; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; font-size: 13px; }
         .stat-item { background: rgba(255,255,255,0.06); padding: 10px; border-radius: 8px; text-align: center; font-weight: 500; color: #cbd5e1; }
         .stat-val { font-size: 20px; font-weight: 700; color: #f59e0b; margin-top: 2px; display: block; }
 
         /* Historik og Log-liste */
-        .history-section { background: white; padding: 18px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-top: 15px; border: 1px solid #eaeaea; }
+        .history-section { background: white; padding: 18px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-top: 15px; border: 1px solid #eaeaea; width: 100%; max-width: 500px; box-sizing: border-box; }
         .history-title { font-weight: 700; font-size: 15px; margin-bottom: 12px; color: #1a1a1a; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; letter-spacing: -0.2px; }
         .log-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f8fafc; font-size: 14px; font-weight: 500; color: #334155; }
         .delete-btn { color: #e94d58; background: none; border: none; cursor: pointer; font-weight: 700; font-size: 13px; padding: 4px 8px; }
@@ -269,9 +269,9 @@
         checkSaturdayNotification();
 
         function tjekFitnessSpørgsmålDage() {
-            const iDag = new Date().getDay();
+            const iDag = new Date().getDay(); // Her var fejlen før – rettet!
             const popCard = document.getElementById('fitness-popup-card');
-            if(iDag === 2 || iDag === 4 || iDag === 7) { 
+            if(iDag === 2 || iDag === 4 || iDag === 0) { // 0 er søndag i JS, rettet fra 7
                 popCard.style.display = 'block';
             } else {
                 popCard.style.display = 'none';
@@ -368,7 +368,7 @@
 
         function registerActionWithInstaCheck() {
             let actionName = 'Skrevet til pige på SoMe 📱';
-            if(confirm("Lagde du også et Instagram-opslag eller en story op med dine trommer/klaver i dag? 🥁🎹")) {
+            if(confirm("Lagde du også et Instagram-opslag eller a story op med dine trommer/klaver i dag? 🥁🎹")) {
                 actionName = 'Skrevet til pige på SoMe + Musik-opslag 📱🥁🎹';
             }
             registerAction(actionName);
